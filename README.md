@@ -22,8 +22,8 @@ Soon LINDA will be able to run by using the open-source [Coin-Cbc](https://proje
 
 #### 2. Package Depedencies
 Additionally before installation, the users must install the following R-package depedencies:
-[igraph](https://igraph.org/r/),
-[XML](https://cran.r-project.org/web/packages/XML/index.html),
+[igraph](https://igraph.org/r/) and
+[XML](https://cran.r-project.org/web/packages/XML/index.html).
 
 #### 3. Package installation
 Once the required solvers have been obtained and the mentioned R-package depedencies have been installed, then the users can proceed with the installation of LINDA.
@@ -47,7 +47,7 @@ A documentation of the current version of the main _runLINDA()_ function can be 
 
 ## Examples
 
-A current example of how to use LINDA over a small Toy test example is ducumented in the vignettes of the package. For this, please check on the LINDA.html documentation.
+A current example of how to use LINDA over a small Toy test example is ducumented in the vignettes of the package. For this, please check on the LINDA package [documentation](https://github.com/dieterich-lab/LINDA/blob/main/doc/LINDA.html).
 
 
 
