@@ -2,8 +2,13 @@ Package: LINDA
 Type: Package
 Title: An ILP Formulation to Integrate Alternative Splicing with Protein Network Analysis.
 Version: 0.1.0
-Author: Enio Gjerga
-Maintainer: Enio Gjerga <E.Gjerga@uni-heidelberg.de>
+Authors@R: c(
+    person(given = "Enio",
+           family = "Gjerga",
+           role = c("cre", "aut"),
+           email = "enio.gjerga@gmail.com",
+           comment = c(ORCID = "0000-0001-8042-0395"))
+           )
 Description: A method that combines estimated Transcription Factor activities with Alternative Splicing analysis and prior knowledge of protein-protein and domain-domain interactions in order to infer upstream protein regulatory networks.
 License: GPL-3
 Encoding: UTF-8

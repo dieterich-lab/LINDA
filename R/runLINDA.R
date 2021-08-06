@@ -17,6 +17,8 @@
 #'FDR: this is as significance value associated with the IncLevelDifference
 #'score. This also can be obtained from differential AS detection tools such as
 #'rMATS.
+#'By default, this parameter is set to NULL which means that LINDA will perform
+#'a splice-un-aware inference of upstream regulatory networks.
 #'@param background.network data frame of the prior knowledge network of
 #'protein-protein (ppi) and domain-domain (ddi) interactions. The data-frame
 #'should contain at lease 6 columns with the following ID's:
@@ -113,7 +115,7 @@
 #' @export
 
 runLINDA <- function(input.scores = input.scores,
-                     as.input = as.input,
+                     as.input = NULL,
                      background.network = bg,
                      solverPath = "/usr/bin/cplex",
                      input.node = NULL,

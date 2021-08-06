@@ -6,7 +6,7 @@
 \usage{
 runLINDA(
   input.scores = input.scores,
-  as.input = as.input,
+  as.input = NULL,
   background.network = bg,
   solverPath = "/usr/bin/cplex",
   input.node = NULL,
@@ -44,7 +44,9 @@ compared to Cond2, while a positive score is an indication of a skipping exon
 in Cond2 compared to Cond1.
 FDR: this is as significance value associated with the IncLevelDifference
 score. This also can be obtained from differential AS detection tools such as
-rMATS.}
+rMATS.
+By default, this parameter is set to NULL which means that LINDA will perform
+a splice-un-aware inference of upstream regulatory networks.}
 
 \item{background.network}{data frame of the prior knowledge network of
 protein-protein (ppi) and domain-domain (ddi) interactions. The data-frame
