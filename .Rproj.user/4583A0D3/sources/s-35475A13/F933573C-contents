@@ -1,0 +1,102 @@
+computeILP_LpSolve <- function(variables = variables,
+                               objective.function = objective.function,
+                               allC = allC){
+
+  # Direction
+  direction <- "min"
+
+  # Objective function
+  objective.in <- rep(0, length(variables$var))
+  vec <- strsplit(x = objective.function, split = " ", fixed = TRUE)[[1]]
+  split <- split(vec, ceiling(seq_along(vec)/3))
+  for(ii in 1:length(split)){
+    idx <- as.numeric(x = gsub(pattern = "xb", replacement = "",
+                               x = split[[ii]][3], fixed = TRUE))
+    if(split[[ii]][1]=="-"){
+      objective.in[idx] <- (-1)*as.numeric(split[[ii]][2])
+    } else {
+      objective.in[idx] <- as.numeric(split[[ii]][2])
+      }
+  }
+
+  # Constraints
+  const.mat <- matrix(data = 0, nrow = length(allC), ncol = length(variables$var))
+  for(ii in 1:length(allC)){
+    vec <- strsplit(x = allC[ii], split = " ", fixed = TRUE)[[1]]
+    varIdx <- which(grepl(pattern = "xb", x = vec, fixed = TRUE))
+    for(jj in 1:length(varIdx)){
+      if(varIdx[jj]==1){
+        const.mat[ii,
+                  as.numeric(gsub(pattern = "xb",
+                                  replacement = "",
+                                  x = vec[varIdx[jj]]))] <- 1
+      } else {
+        if((varIdx[jj]-varIdx[jj-1])==2){
+          if(vec[varIdx[jj]-1]=="+"){
+            const.mat[ii,
+                      as.numeric(gsub(pattern = "xb",
+                                      replacement = "",
+                                      x = vec[varIdx[jj]]))] <- 1
+          } else {
+            const.mat[ii,
+                      as.numeric(gsub(pattern = "xb",
+                                      replacement = "",
+                                      x = vec[varIdx[jj]]))] <- -1
+          }
+        } else {
+          if(vec[varIdx[jj]-2]=="+"){
+            const.mat[ii,
+                      as.numeric(gsub(pattern = "xb",
+                                      replacement = "",
+                                      x = vec[varIdx[jj]]))] <-
+              as.numeric(vec[varIdx[jj]-1])
+          } else {
+            const.mat[ii,
+                      as.numeric(gsub(pattern = "xb",
+                                      replacement = "",
+                                      x = vec[varIdx[jj]]))] <-
+              (-1)*as.numeric(vec[varIdx[jj]-1])
+          }
+        }
+      }
+    }
+  }
+
+  # Constraints Directionality
+  direction_set <- c("<", ">", "<=", ">=")
+  const.dir <- rep("=", length(allC))
+  for(ii in 1:length(direction_set)){
+    idx <- which(grepl(pattern = direction_set[ii], x = allC, fixed = TRUE))
+    if(length(idx)>0){const.dir[idx] <- direction_set[ii]}
+  }
+
+  # Constraints RHS's
+  last <- function(x) { tail(x, n = 1) }
+  const.rhs <- as.numeric(sapply(strsplit(x = allC, split = " ", fixed = TRUE),
+                                 last))
+
+  # Binary & Integer Variables
+  binary.vec <- setdiff(x = 1:length(variables$var_exp),
+                        y = which(grepl(pattern = "dist ",
+                                        x = variables$var_exp,
+                                        fixed = TRUE)))
+  int.vec <- setdiff(x = 1:length(variables$var_exp),
+                     y = which(grepl(pattern = "dist ",
+                                     x = variables$var_exp,
+                                     fixed = TRUE)))
+
+  # Solve problem
+  res <- lp(direction = direction, objective.in = objective.in,
+            const.mat = const.mat, const.dir = const.dir, const.rhs = const.rhs,
+            transpose.constraints = TRUE, int.vec = NULL, presolve = 0,
+            compute.sens = 0, binary.vec = binary.vec, all.int = FALSE,
+            all.bin = FALSE, scale = 196, num.bin.solns = 1, use.rw = FALSE)
+
+  # Read, cleanup and return solution
+  sif <- read_solution_lpsolve(variables = variables, res = res)
+  
+  cleanupILP(condition = condition)
+
+  return(sif)
+
+}

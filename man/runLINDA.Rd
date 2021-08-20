@@ -8,7 +8,7 @@ runLINDA(
   input.scores = input.scores,
   as.input = NULL,
   background.network = bg,
-  solverPath = "/usr/bin/cplex",
+  solverPath = NULL,
   input.node = NULL,
   pValThresh = 0.05,
   pValThresh2 = NULL,
@@ -22,7 +22,9 @@ runLINDA(
   timelimit = 3600,
   intensity = 0,
   replace = 1,
-  condition = 1
+  threads = 0,
+  condition = 1,
+  solver = "cplex"
 )
 }
 \arguments{
@@ -125,7 +127,8 @@ seconds.}
 number of solutions generated for the solution pool and the amount of time or
 memory consumed. Values from 1 to 4 invoke increasing effort to find larger
 numbers of solutions. Higher values are more expensive in terms of time and
-memory but are likely to yield more solutions. By default, intensity=0.}
+memory but are likely to yield more solutions. By default, intensity=0 (let
+CPLEX choose).}
 
 \item{replace}{CPLEX parameter which designates the strategy for replacing a
 solution in the solution pool when the solution pool has reached its capacity.
@@ -138,6 +141,11 @@ replace=1.}
 desirde to run over multiple analyses in parallel. It is useful to distinguish
 between the multiple ILP problems defined for each case as well as the
 solutions obtained. By default, conditions=1.}
+
+\item{solver}{a character parameter indicating the type of solver to be used.
+It can only take three different values ('lpSolve', 'cplex' and 'cbc')
+depending on the type of solver the user wishes to use. By default,
+solver='lpSolve'.}
 }
 \value{
 Results list containing each of the LINDA unique solutions as well as

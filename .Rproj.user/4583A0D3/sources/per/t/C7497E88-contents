@@ -1,0 +1,111 @@
+library(readr)
+library(msa)
+library(DECIPHER)
+library(Biostrings)
+
+# Read the stuff
+fasta <- read.table("~/Desktop/Sequence_Alignment/28S/28S_NR_145822_1_N1.fa", quote="\"", comment.char="")
+sequence1 <- ""
+for(ii in 1:nrow(fasta)){
+  sequence1 <- paste0(sequence1, fasta$V1[ii])
+}
+
+fasta <- read.table("~/Desktop/Sequence_Alignment/28S/28S_NR_146148_1_N2.fa", quote="\"", comment.char="")
+sequence2 <- ""
+for(ii in 1:nrow(fasta)){
+  sequence2 <- paste0(sequence2, fasta$V1[ii])
+}
+
+fasta <- read.table("~/Desktop/Sequence_Alignment/28S/28S_NR_146154_1_N3.fa", quote="\"", comment.char="")
+sequence3 <- ""
+for(ii in 1:nrow(fasta)){
+  sequence3 <- paste0(sequence3, fasta$V1[ii])
+}
+
+fasta <- read.table("~/Desktop/Sequence_Alignment/28S/28S_NR_146118_1_N4.fa", quote="\"", comment.char="")
+sequence4 <- ""
+for(ii in 1:nrow(fasta)){
+  sequence4 <- paste0(sequence4, fasta$V1[ii])
+}
+
+fasta <- read.table("~/Desktop/Sequence_Alignment/28S/28S_NR_003287_4_N5.fa", quote="\"", comment.char="")
+sequence5 <- ""
+for(ii in 1:nrow(fasta)){
+  sequence5 <- paste0(sequence5, fasta$V1[ii])
+}
+
+# Align
+sequences <- DNAStringSet(c(sequence1, sequence2, sequence3, sequence4, sequence5))
+RNA <- AlignSeqs(sequences)
+writeXStringSet(RNA, file="28S_Aligned.fa")
+
+# Generate Consensus
+aligned_sequences <- read.csv("28S_Aligned.fa", sep="")
+idxSep <- which(aligned_sequences$X.==">")
+
+sequence1 <- ""
+for(ii in 1:(idxSep[1]-1)){
+  sequence1 <- paste0(sequence1, aligned_sequences$X.[ii])
+}
+
+sequence2 <- ""
+for(ii in (idxSep[1]+1):(idxSep[2]-1)){
+  sequence2 <- paste0(sequence2, aligned_sequences$X.[ii])
+}
+
+sequence3 <- ""
+for(ii in (idxSep[2]+1):(idxSep[3]-1)){
+  sequence3 <- paste0(sequence3, aligned_sequences$X.[ii])
+}
+
+sequence4 <- ""
+for(ii in (idxSep[3]+1):(idxSep[4]-1)){
+  sequence4 <- paste0(sequence4, aligned_sequences$X.[ii])
+}
+
+sequence5 <- ""
+for(ii in (idxSep[4]+1):nrow(aligned_sequences)){
+  sequence5 <- paste0(sequence5, aligned_sequences$X.[ii])
+}
+
+bases <- c("A", "T", "C", "G")
+consensus_sequence <- rep("", nchar(sequence1))
+for(ii in 1:nchar(sequence1)){
+
+  cntVec <- rep(0, 4)
+  for(jj in 1:length(bases)){
+    if(substr(x = sequence1, start = ii, stop = ii)==bases[jj]){
+      cntVec[jj] <- cntVec[jj]+1
+    }
+    if(substr(x = sequence2, start = ii, stop = ii)==bases[jj]){
+      cntVec[jj] <- cntVec[jj]+1
+    }
+    if(substr(x = sequence3, start = ii, stop = ii)==bases[jj]){
+      cntVec[jj] <- cntVec[jj]+1
+    }
+    if(substr(x = sequence4, start = ii, stop = ii)==bases[jj]){
+      cntVec[jj] <- cntVec[jj]+1
+    }
+    if(substr(x = sequence5, start = ii, stop = ii)==bases[jj]){
+      cntVec[jj] <- cntVec[jj]+1
+    }
+  }
+
+  consensus_sequence[ii] <- bases[which(cntVec==max(cntVec))[1]]
+
+
+}
+
+consensus_split <- split(consensus_sequence, ceiling(seq_along(consensus_sequence)/79))
+
+consensus_matrix <- matrix(data = , nrow = length(consensus_split), ncol = 1)
+for(ii in 1:length(consensus_split)){
+
+  consensus_matrix[ii, 1] <- gsub(pattern = "T", replacement = "U",
+                                  x = paste0(consensus_split[[ii]], collapse = ""), fixed = TRUE)
+
+
+}
+
+write.table(x = consensus_matrix, file = "28S_Consensus_Reference.fa", quote = FALSE, sep = "\t",
+            row.names = FALSE, col.names = FALSE)
