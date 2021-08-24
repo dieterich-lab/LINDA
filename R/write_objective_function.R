@@ -18,7 +18,7 @@ write_objective_function <- function(background.network = background.network,
 
   objective.function <- ""
   cnt <- 1
-  for(ii in 1:nrow(input.scores)){
+  for(ii in seq_len(nrow(input.scores))){
 
     idx <- which(variables$var_exp==paste0("node ", input.scores$id[ii]))
     if(length(idx)==1){
@@ -68,7 +68,7 @@ write_objective_function <- function(background.network = background.network,
                      y = which(background.network$source_fdr<=pValThresh2))
     if(length(idx)>0){
       obj <- rep("", length(idx))
-      for(ii in 1:length(idx)){
+      for(ii in seq_len(length(idx))){
 
         currScore <- background.network$source_score[idx[ii]]
         idx_var <-
@@ -102,7 +102,7 @@ write_objective_function <- function(background.network = background.network,
                 y = which(background.network$target_fdr<=pValThresh2))
     if(length(idx)>0){
       obj <- rep("", length(idx))
-      for(ii in 1:length(idx)){
+      for(ii in seq_len(length(idx))){
 
         currScore <- background.network$target_score[idx[ii]]
         idx_var <-

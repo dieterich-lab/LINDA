@@ -59,7 +59,7 @@ read_solution_cbc <- function(variables = variables,
                                 fixed = TRUE),
                        '[',
                        2)
-    for(ii in 1:nrow(sif)){
+    for(ii in seq_len(nrow(sif))){
       idx <- which(int==paste0(sif[ii, 1], "=", sif[ii, 3]))
       sif[ii, 4] <- paste0(sapply(strsplit(x = reactions[idx],
                                            split = " ",

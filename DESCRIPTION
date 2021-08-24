@@ -21,9 +21,6 @@ Imports:
     readr,
     XML,
     igraph,
-    dplyr,
-    plyr,
-    tidyverse,
     rmarkdown,
     qpdf
 biocViews: Transcription, DifferentialSplicing, GeneExpression, NetworkInference

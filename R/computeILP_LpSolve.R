@@ -10,7 +10,7 @@ computeILP_LpSolve <- function(variables = variables,
   objective.in <- rep(0, length(variables$var))
   vec <- strsplit(x = objective.function, split = " ", fixed = TRUE)[[1]]
   split <- split(vec, ceiling(seq_along(vec)/3))
-  for(ii in 1:length(split)){
+  for(ii in seq_len(length(split))){
     idx <- as.numeric(x = gsub(pattern = "xb", replacement = "",
                                x = split[[ii]][3], fixed = TRUE))
     if(split[[ii]][1]=="-"){
@@ -24,10 +24,10 @@ computeILP_LpSolve <- function(variables = variables,
   const.mat <- matrix(data = 0,
                       nrow = length(allC),
                       ncol = length(variables$var))
-  for(ii in 1:length(allC)){
+  for(ii in seq_len(length(allC))){
     vec <- strsplit(x = allC[ii], split = " ", fixed = TRUE)[[1]]
     varIdx <- which(grepl(pattern = "xb", x = vec, fixed = TRUE))
-    for(jj in 1:length(varIdx)){
+    for(jj in seq_len(length(varIdx))){
       if(varIdx[jj]==1){
         const.mat[ii,
                   as.numeric(gsub(pattern = "xb",
@@ -68,7 +68,7 @@ computeILP_LpSolve <- function(variables = variables,
   # Constraints Directionality
   direction_set <- c("<", ">", "<=", ">=")
   const.dir <- rep("=", length(allC))
-  for(ii in 1:length(direction_set)){
+  for(ii in seq_len(length(direction_set))){
     idx <- which(grepl(pattern = direction_set[ii], x = allC, fixed = TRUE))
     if(length(idx)>0){const.dir[idx] <- direction_set[ii]}
   }

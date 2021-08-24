@@ -25,7 +25,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
     as <- as.input
 
     uTranscripts <- unique(as$transcript_id)
-    for(ii in 1:length(uTranscripts)){
+    for(ii in seq_len(length(uTranscripts))){
 
       fdr <- min(as$FDR[which(as$transcript_id==uTranscripts[ii])],
                  na.rm = TRUE)
@@ -38,7 +38,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
                          x = background.network$exon_source,
                          fixed = TRUE))
       if(length(idx)>0){
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
           if(fdr < source_fdr[idx[jj]]){
             source_score[idx[jj]] <- score
             source_fdr[idx[jj]] <- fdr
@@ -50,7 +50,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
                          x = background.network$exon_target,
                          fixed = TRUE))
       if(length(idx)>0){
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
           if(fdr < target_fdr[idx[jj]]){
             target_score[idx[jj]] <- score
             target_fdr[idx[jj]] <- fdr

@@ -21,7 +21,7 @@ write_loop_constraints <- function(variables = variables,
   cc2 <- paste0(distVar, " <= ", 100001)
 
   cc3 <- rep("", nrow(sif))
-  for(ii in 1:nrow(sif)){
+  for(ii in seq_len(nrow(sif))){
 
     var1 <- variables$var[which(variables$var_exp==paste0("dist ",
                                                           sif[ii, 2]))]

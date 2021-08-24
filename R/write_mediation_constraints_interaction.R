@@ -7,7 +7,7 @@ write_mediation_constraints_interaction  <- function(variables =
 
   cc <- rep("", nrow(background.network))
 
-  for(ii in 1:nrow(ppi)){
+  for(ii in seq_len(nrow(ppi))){
 
     ## print(paste0("Progress ", ii, "/", nrow(ppi)))
 
