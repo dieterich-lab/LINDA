@@ -167,7 +167,7 @@ runLINDA <- function(input.scores = input.scores,
   # print("Processing background network. Please wait.")
   bn <- prepare_bn(background.network = background.network,
                    as.input = as.input, input.node = input.node,
-                   input.scores = input.scores)
+                   input.scores = input.scores, pValThresh = pValThresh)
 
   # print("Writing objective function and constraints. Please wait.")
   variables <- create_variables(background.network = bn$background.network)

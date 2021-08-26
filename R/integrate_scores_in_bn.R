@@ -1,5 +1,6 @@
 integrate_scores_in_bn <- function(as.input = as.input,
-                                   background.network = background.network){
+                                   background.network = background.network,
+                                   pValThresh = pValThresh){
 
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
@@ -60,8 +61,23 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     }
 
-    min_score <- pmin(source_score, target_score)
-    min_fdr <- pmin(source_fdr, target_fdr)
+    min_score <- rep(NA, nrow(background.network))
+    min_fdr <- rep(NA, nrow(background.network))
+    for(ii in 1:nrow(background.network)){
+
+      if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
+        min_score[ii] <- source_score[ii]
+        min_fdr[ii] <- source_fdr[ii]
+      } else {
+        if(target_score[ii]<0 && target_fdr[ii]<pValThresh){
+          min_score[ii] <- target_score[ii]
+          min_fdr[ii] <- target_fdr[ii]
+        } else {
+          min_score[ii] <- max(source_score[ii], target_score[ii])
+          min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+        }
+      }
+    }
 
     background.network$source_score <- source_score
     background.network$target_score <- target_score

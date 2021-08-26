@@ -1,7 +1,8 @@
 prepare_bn <- function(background.network = NULL,
                        as.input = NULL,
                        input.node = NULL,
-                       input.scores = NULL){
+                       input.scores = NULL,
+                       pValThresh = NULL){
 
   print("Processing the Background Network..")
 
@@ -145,7 +146,8 @@ prepare_bn <- function(background.network = NULL,
 
   ## Integrate the scores
   background.network <- integrate_scores_in_bn(as.input = as.input,
-                                               background.network = bg2keep)
+                                               background.network = bg2keep,
+                                               pValThresh = pValThresh)
 
   ## Now return the output
   returnList <- list()
