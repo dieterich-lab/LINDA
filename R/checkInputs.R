@@ -4,7 +4,6 @@ checkInputs <- function(input.scores = input.scores,
                         solverPath = solverPath,
                         input.node = input.node,
                         pValThresh = pValThresh,
-                        pValThresh2 = pValThresh2,
                         top = top,
                         lambda1 = lambda1,
                         lambda2 = lambda2,
@@ -36,13 +35,13 @@ checkInputs <- function(input.scores = input.scores,
     if(!is.data.frame(as.input) ||
        ncol(as.input)<3 ||
        length(intersect(x = colnames(as.input),
-                        y = c("transcript_id",
-                              "IncLevelDifference",
-                              "FDR"))) < 3){
+                        y = c("exon_id",
+                              "effect",
+                              "significance"))) < 3){
 
       stop("The 'as.input' object should either be NULL or a data-frame with
-            three columns and have at least c('transcript_id',
-            'IncLevelDifference', 'FDR') as column ID's. Please check your
+            three columns and have at least c('exon_id',
+            'effect', 'significance') as column ID's. Please check your
             inputs.")
 
     }
@@ -90,18 +89,6 @@ checkInputs <- function(input.scores = input.scores,
 
     stop("The 'pValThresh' parameter should be numeric. Please check your
          inputs.")
-
-  }
-
-  if(!is.null(pValThresh2)){
-
-    if(!is.numeric(pValThresh2) ||
-       length(pValThresh2)>1){
-
-      stop("The 'pValThresh2' parameter should either be NULL or numeric. Please
-         check your inputs.")
-
-    }
 
   }
 

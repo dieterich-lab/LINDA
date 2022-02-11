@@ -47,7 +47,6 @@
 #'IncLevelDifference score value, are considered to be skipped and such
 #'information will be integrated in the AS-constraints of the ILP formulation.
 #'By default, pValThresh=0.05.
-#'@param pValThresh2 .
 #'@param top (optional) a parameter indicating the number of TF's to be
 #'considered as significantly regulated based on the absolute highest activity
 #'value. The network solution must include as many of the top-regulated TF’s
@@ -124,20 +123,21 @@ runLINDA <- function(input.scores = input.scores,
                      solverPath = NULL,
                      input.node = NULL,
                      pValThresh = 0.05,
-                     pValThresh2 = NULL,
                      top = 50,
-                     lambda1 = 10,
-                     lambda2 = 0.001,
-                     mipgap = 0.001,
-                     relgap = 0.001,
+                     lambda1 = 100,
+                     lambda2 = 1,
+                     mipgap = 0,
+                     relgap = 0,
                      populate = 1000,
                      nSolutions = 100,
-                     timelimit = 3600,
-                     intensity = 0,
+                     timelimit = 15000,
+                     intensity = 1,
                      replace = 1,
                      threads = 0,
                      condition = 1,
-                     solver = "cplex"){
+                     solver = "cplex",
+                     background_network_path = NULL,
+                     save_res = TRUE){
 
   options(scipen=999)
 
@@ -147,7 +147,6 @@ runLINDA <- function(input.scores = input.scores,
               solverPath = solverPath,
               input.node = input.node,
               pValThresh = pValThresh,
-              pValThresh2 = pValThresh2,
               top = top,
               lambda1 = lambda1,
               lambda2 = lambda2,
@@ -165,9 +164,13 @@ runLINDA <- function(input.scores = input.scores,
   input.scores <- bin_measurements(input.scores = input.scores, top = top)
 
   # print("Processing background network. Please wait.")
-  bn <- prepare_bn(background.network = background.network,
-                   as.input = as.input, input.node = input.node,
-                   input.scores = input.scores, pValThresh = pValThresh)
+  if(is.null(background_network_path)){
+    bn <- prepare_bn(background.network = background.network,
+                     as.input = as.input, input.node = input.node,
+                     input.scores = input.scores, pValThresh = pValThresh)
+  } else {
+    load(file = background_network_path)
+  }
 
   # print("Writing objective function and constraints. Please wait.")
   variables <- create_variables(background.network = bn$background.network)
@@ -181,9 +184,7 @@ runLINDA <- function(input.scores = input.scores,
                                                  lambda1 =
                                                    lambda1,
                                                  lambda2 =
-                                                   lambda2,
-                                                 pValThresh2 =
-                                                   pValThresh2)
+                                                   lambda2)
 
   allC <- write_all_constraints(variables = variables,
                                 bn = bn,
@@ -237,6 +238,10 @@ runLINDA <- function(input.scores = input.scores,
 
     }
 
+  }
+
+  if(save_res){
+    save(res, file = paste0("res_", condition, ".RData"))
   }
 
   return(res)

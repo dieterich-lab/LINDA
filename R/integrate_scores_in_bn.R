@@ -2,6 +2,8 @@ integrate_scores_in_bn <- function(as.input = as.input,
                                    background.network = background.network,
                                    pValThresh = pValThresh){
 
+  colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
+
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
   target_score <- rep(0, nrow(background.network))
@@ -25,14 +27,14 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     as <- as.input
 
-    uTranscripts <- unique(as$transcript_id)
+    uTranscripts <- unique(as$exon_id)
     for(ii in seq_len(length(uTranscripts))){
 
-      fdr <- min(as$FDR[which(as$transcript_id==uTranscripts[ii])],
+      fdr <- min(as$pval[which(as$exon_id==uTranscripts[ii])],
                  na.rm = TRUE)
-      score <- min(as$IncLevelDifference[intersect(
-        x = which(as$transcript_id==uTranscripts[ii]),
-        y = which(as$FDR==fdr))],
+      score <- max(as$IncLevelDifference[intersect(
+        x = which(as$exon_id==uTranscripts[ii]),
+        y = which(as$pval==fdr))],
         na.rm = TRUE)
 
       idx <- which(grepl(pattern = uTranscripts[ii],
@@ -61,8 +63,8 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     }
 
-    min_score <- rep(NA, nrow(background.network))
-    min_fdr <- rep(NA, nrow(background.network))
+    min_score <- rep("", nrow(background.network))
+    min_fdr <- rep("", nrow(background.network))
     for(ii in 1:nrow(background.network)){
 
       if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
