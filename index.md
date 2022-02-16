@@ -1,37 +1,27 @@
-## Welcome to GitHub Pages
+## Overview
 
-You can use the [editor on GitHub](https://github.com/enio23/LINDA_Example/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+LINDA (Linear Integer programming for Network reconstruction using transcriptomics and Differential splicing data Analysis), is an R-Package used to identify the mechanistic upstream regulatory signalling processes that drive gene expression changes by also taking into account the contribution of alternative splicing events to signal protein variability and information flow modulation.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Install
 
-### Markdown
+LINDA can be installed either locally by downloading its [source code](https://github.com/dieterich-lab/LINDA) or directly from GitHub via [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html).
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+#### Download
+1.  Download LINDA package (*Main* or *Development* branch) by clicking on **Code** and then **Download ZIP**.
+2.  Start R.
+3.  Unzip package and set working directory to where LINDA has been downloaded in the R workspace.
+4.  Install LINDA by running: `install.packages('LINDA/', repos = NULL, type="source")`.
 
-```markdown
-Syntax highlighted code block
+#### devtools
+1.  Make sure [devtools](https://github.com/dieterich-lab/LINDA) is installed.
+2.  Start R.
+3.  Run `install_github("dieterich-lab/LINDA", build_vignettes = TRUE)`.
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/enio23/LINDA_Example/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Documentation
+The LINDA pipeline and it prerequisites have been documented on its Vignettes. Also documentation about to test cases (one Toy example and one Real-case application) have been provided.
+1.  For an explanation of the LINDA pipeline and a to run a small Toy test case-study, you can check the vignettes by simply running: `vignette("LINDA")`.
+2.  Also a step-by-step explanation of LINDA application over a real case-study has been provided in: https://github.com/enio23/LINDA_Example.
 
 ### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Having trouble with LINDA? You can open an Issue on the dedicated [LINDA repository](https://github.com/dieterich-lab/LINDA), or simply drop us an email on [E.Gjerga@uni-eidelberg.de](E.Gjerga@uni-eidelberg.de) & [Christoph.Dieterich@uni-heidelberg.de](Christoph.Dieterich@uni-heidelberg.de) and we’ll help you sort it out.
