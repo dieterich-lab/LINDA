@@ -15,7 +15,7 @@ write_inout_constraints <- function(background.network = background.network,
   ccin <- rep("", length(pSet))
   # ccout <- rep("", length(setdiff(pSet, input.scores$id)))
   ccout <- rep("", length(pSet))
-  for(ii in 1:length(pSet)){
+  for(ii in seq_len(length(pSet))){
 
     if(pSet[ii]%in%input.scores$id){
 

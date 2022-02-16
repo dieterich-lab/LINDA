@@ -54,7 +54,7 @@ read_solution_cplex <- function(variables = variables,
                                       fixed = TRUE),
                              '[',
                              2)
-      for(jj in 1:length(uInt)){
+      for(jj in seq_len(length(uInt))){
 
         idx <-
           which(grepl(pattern =
@@ -73,7 +73,7 @@ read_solution_cplex <- function(variables = variables,
 
   }
 
-  for(ii in 1:length(sifAll)){
+  for(ii in seq_len(length(sifAll))){
 
     if(ii==1){
 
@@ -82,7 +82,7 @@ read_solution_cplex <- function(variables = variables,
     } else {
 
       currSIF <- sifAll[[ii]][, 1:3]
-      for(jj in 1:nrow(currSIF)){
+      for(jj in seq_len(nrow(currSIF))){
 
         idx1 <- which(combSIF[, 1]==currSIF[jj, 1])
         idx2 <- which(combSIF[, 3]==currSIF[jj, 3])
@@ -104,13 +104,13 @@ read_solution_cplex <- function(variables = variables,
   }
 
   domains <- rep("", nrow(combSIF))
-  for(ii in 1:nrow(combSIF)){
+  for(ii in seq_len(nrow(combSIF))){
 
     ss <- combSIF[ii, 1]
     tt <- combSIF[ii, 3]
 
     ud <- c()
-    for(jj in 1:length(sifAll)){
+    for(jj in seq_len(length(sifAll))){
 
       idx1 <- which(sifAll[[jj]][, 1]==ss)
       idx2 <- which(sifAll[[jj]][, 3]==tt)

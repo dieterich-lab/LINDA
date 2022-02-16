@@ -16,7 +16,7 @@ LINDA requires the interactive version of IBM Cplex as an ILP problem optimiser.
 
 Once the solvers has been acquired by the user, they must save the executable files in any desired location in the machine they are using and then they can run the LINDA analysis after specifying the solver type (through the *solver* parameter of the functions, 'cplex' or 'cbc'/'lpSolve' in the future) and the path to the executable file (through the *solverPath* parameter).
 
-Soon LINDA will be able to run by using the open-source [Coin-Cbc](https://projects.coin-or.org/Cbc) as well as the [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html) R-package for smaller case studies.
+Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.coin-or.org/Cbc) as well as the [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html) R-package for smaller case studies.
 
 **NOTE:** We strongly encourage using cplex to solve the LINDA problems since the tool has been mostly maintained by considering CPLEX in mind and also because it showed to be more efficient computationally.
 
@@ -47,7 +47,7 @@ A documentation of the current version of the main _runLINDA()_ function can be 
 
 ## Examples
 
-A current example of how to use LINDA over a small Toy test example is ducumented in the vignettes of the package. For this, please check on the LINDA package [documentation](https://github.com/dieterich-lab/LINDA/blob/main/doc/LINDA.html).
+A current example of how to use LINDA over a small Toy test example is ducumented in the vignettes of the package. For this, please check on the LINDA package [documentation](https://github.com/dieterich-lab/LINDA/blob/main/doc/LINDA.html). Another real case example can be found [here](https://github.com/enio23/LINDA_Example)
 
 
 

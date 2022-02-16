@@ -7,7 +7,7 @@ write_domain_constraints <- function(background.network = NULL,
 
   c1 <- rep("", nrow(ppi))
   c2 <- rep(list(c()), nrow(ppi))
-  for(ii in 1:nrow(ppi)){
+  for(ii in seq_len(nrow(ppi))){
 
     # print(paste0("Progress --- ", ii, "/", nrow(ppi)))
 

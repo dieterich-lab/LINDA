@@ -2,8 +2,7 @@ write_objective_function <- function(background.network = background.network,
                                      variables = variables,
                                      input.scores = input.scores,
                                      lambda1=10,
-                                     lambda2=0.01,
-                                     pValThresh2=NULL){
+                                     lambda2=0.01){
 
   print("Writing the objective function and constraints.
         This might take a bit of time..")
@@ -18,7 +17,7 @@ write_objective_function <- function(background.network = background.network,
 
   objective.function <- ""
   cnt <- 1
-  for(ii in 1:nrow(input.scores)){
+  for(ii in seq_len(nrow(input.scores))){
 
     idx <- which(variables$var_exp==paste0("node ", input.scores$id[ii]))
     if(length(idx)==1){
@@ -57,77 +56,6 @@ write_objective_function <- function(background.network = background.network,
 
       }
 
-    }
-
-  }
-
-  if(!is.null(pValThresh2)){
-
-    # Write second objective - AS scores for source
-    idx <- intersect(x = which(background.network$source_score!=0),
-                     y = which(background.network$source_fdr<=pValThresh2))
-    if(length(idx)>0){
-      obj <- rep("", length(idx))
-      for(ii in 1:length(idx)){
-
-        currScore <- background.network$source_score[idx[ii]]
-        idx_var <-
-          which(
-            variables$var_exp==paste0("domain ",
-                                      background.network$pfam_source[idx[ii]],
-                                      " of protein ",
-                                      background.network$gene_source[idx[ii]]))
-        if(currScore > 0){
-          obj[ii] <- paste0(" - ",
-                            currScore,
-                            " ",
-                            variables$var[idx_var[1]])
-        } else {
-          obj[ii] <- paste0(" + ",
-                            abs(currScore),
-                            " ",
-                            variables$var[idx_var[1]])
-        }
-
-      }
-
-      obj <- paste0(obj, collapse = "")
-
-      objective.function <- paste0(objective.function, obj)
-    }
-
-    # Write second objective - AS scores for target
-    idx <-
-      intersect(x = which(background.network$target_score!=0),
-                y = which(background.network$target_fdr<=pValThresh2))
-    if(length(idx)>0){
-      obj <- rep("", length(idx))
-      for(ii in 1:length(idx)){
-
-        currScore <- background.network$target_score[idx[ii]]
-        idx_var <-
-          which(
-            variables$var_exp==paste0("domain ",
-                                      background.network$pfam_target[idx[ii]],
-                                      " of protein ",
-                                      background.network$gene_target[idx[ii]]))
-        if(currScore > 0){
-          obj[ii] <- paste0(" - ",
-                            currScore,
-                            " ",
-                            variables$var[idx_var[1]])
-        } else {
-          obj[ii] <- paste0(" + ",
-                            abs(currScore),
-                            " ",
-                            variables$var[idx_var[1]])
-        }
-
-      }
-
-      obj <- paste0(obj, collapse = "")
-
-      objective.function <- paste0(objective.function, obj)
     }
 
   }

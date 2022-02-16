@@ -1,5 +1,8 @@
 integrate_scores_in_bn <- function(as.input = as.input,
-                                   background.network = background.network){
+                                   background.network = background.network,
+                                   pValThresh = pValThresh){
+
+  colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
 
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
@@ -24,21 +27,21 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     as <- as.input
 
-    uTranscripts <- unique(as$transcript_id)
-    for(ii in 1:length(uTranscripts)){
+    uTranscripts <- unique(as$exon_id)
+    for(ii in seq_len(length(uTranscripts))){
 
-      fdr <- min(as$FDR[which(as$transcript_id==uTranscripts[ii])],
+      fdr <- min(as$pval[which(as$exon_id==uTranscripts[ii])],
                  na.rm = TRUE)
-      score <- min(as$IncLevelDifference[intersect(
-        x = which(as$transcript_id==uTranscripts[ii]),
-        y = which(as$FDR==fdr))],
+      score <- max(as$IncLevelDifference[intersect(
+        x = which(as$exon_id==uTranscripts[ii]),
+        y = which(as$pval==fdr))],
         na.rm = TRUE)
 
       idx <- which(grepl(pattern = uTranscripts[ii],
                          x = background.network$exon_source,
                          fixed = TRUE))
       if(length(idx)>0){
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
           if(fdr < source_fdr[idx[jj]]){
             source_score[idx[jj]] <- score
             source_fdr[idx[jj]] <- fdr
@@ -50,7 +53,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
                          x = background.network$exon_target,
                          fixed = TRUE))
       if(length(idx)>0){
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
           if(fdr < target_fdr[idx[jj]]){
             target_score[idx[jj]] <- score
             target_fdr[idx[jj]] <- fdr
@@ -60,8 +63,23 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     }
 
-    min_score <- pmin(source_score, target_score)
-    min_fdr <- pmin(source_fdr, target_fdr)
+    min_score <- rep("", nrow(background.network))
+    min_fdr <- rep("", nrow(background.network))
+    for(ii in 1:nrow(background.network)){
+
+      if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
+        min_score[ii] <- source_score[ii]
+        min_fdr[ii] <- source_fdr[ii]
+      } else {
+        if(target_score[ii]<0 && target_fdr[ii]<pValThresh){
+          min_score[ii] <- target_score[ii]
+          min_fdr[ii] <- target_fdr[ii]
+        } else {
+          min_score[ii] <- max(source_score[ii], target_score[ii])
+          min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+        }
+      }
+    }
 
     background.network$source_score <- source_score
     background.network$target_score <- target_score

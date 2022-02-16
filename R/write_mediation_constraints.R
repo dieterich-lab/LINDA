@@ -11,7 +11,7 @@ write_mediation_constraints <- function(variables =
   cc1 <- rep("", nrow(ppi))
   cc2 <- rep("", nrow(ppi))
 
-  for(ii in 1:nrow(ppi)){
+  for(ii in seq_len(nrow(ppi))){
 
     ## print(paste0("Progress ", ii, "/", nrow(ppi)))
 

@@ -1,7 +1,8 @@
 prepare_bn <- function(background.network = NULL,
                        as.input = NULL,
                        input.node = NULL,
-                       input.scores = NULL){
+                       input.scores = NULL,
+                       pValThresh = NULL){
 
   print("Processing the Background Network..")
 
@@ -18,7 +19,7 @@ prepare_bn <- function(background.network = NULL,
 
     top.proteins <- unique(setdiff(x = ppi$gene_source, y = ppi$gene_target))
 
-    for(ii in 1:length(top.proteins)){
+    for(ii in seq_len(length(top.proteins))){
 
       upfam <-
         unique(background.network$pfam_source[
@@ -31,7 +32,7 @@ prepare_bn <- function(background.network = NULL,
                        nrow = length(upfam),
                        ncol = ncol(background.network))
       colnames(toBind) <- colnames(background.network)
-      for(jj in 1:nrow(toBind)){
+      for(jj in seq_len(nrow(toBind))){
 
         toBind[jj, 1] <- "Perturbation"
         toBind[jj, 2] <- utrans[jj]
@@ -102,7 +103,7 @@ prepare_bn <- function(background.network = NULL,
   targetVn<-match(intNodes, V(gg)$name)
 
   targetPaths<-rep(NA,2)
-  for(ii in 1:length(intNodes)){
+  for(ii in seq_len(length(intNodes))){
 
     # print(paste0("Step -- ", ii, "/", length(intNodes)))
     sP <- get.all.shortest.paths(graph = gg,
@@ -145,7 +146,8 @@ prepare_bn <- function(background.network = NULL,
 
   ## Integrate the scores
   background.network <- integrate_scores_in_bn(as.input = as.input,
-                                               background.network = bg2keep)
+                                               background.network = bg2keep,
+                                               pValThresh = pValThresh)
 
   ## Now return the output
   returnList <- list()

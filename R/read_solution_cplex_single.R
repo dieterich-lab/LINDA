@@ -26,7 +26,7 @@ read_solution_cplex_single <- function(variables = variables,
   idxReac <- intersect(x = which(varvar%in%reacVar), y = which(valval==1))
   idxInt <- intersect(x = which(varvar%in%intVar), y = which(valval==1))
 
-  for(jj in 1:length(idxReac)){
+  for(jj in seq_len(length(idxReac))){
 
     currVar <- varvar[idxReac[jj]]
     currReac <- variables$var_exp[which(variables$var==currVar)]
@@ -41,7 +41,7 @@ read_solution_cplex_single <- function(variables = variables,
   }
   sifAll1[[length(sifAll1)+1]] <- unique(sif1[-1, ])
 
-  for(jj in 1:length(idxInt)){
+  for(jj in seq_len(length(idxInt))){
 
     currVar <- varvar[idxInt[jj]]
     currReac <- variables$var_exp[which(variables$var==currVar)]
@@ -72,7 +72,7 @@ read_solution_cplex_single <- function(variables = variables,
     idxReac <- intersect(x = which(varvar%in%reacVar), y = which(valval==1))
     idxInt <- intersect(x = which(varvar%in%intVar), y = which(valval==1))
 
-    for(jj in 1:length(idxReac)){
+    for(jj in seq_len(length(idxReac))){
 
       currVar <- varvar[idxReac[jj]]
       currReac <- variables$var_exp[which(variables$var==currVar)]
@@ -87,7 +87,7 @@ read_solution_cplex_single <- function(variables = variables,
     }
     sifAll1[[length(sifAll1)+1]] <- unique(sif1[-1, ])
 
-    for(jj in 1:length(idxInt)){
+    for(jj in seq_len(length(idxInt))){
 
       currVar <- varvar[idxInt[jj]]
       currReac <- variables$var_exp[which(variables$var==currVar)]
@@ -107,7 +107,7 @@ read_solution_cplex_single <- function(variables = variables,
   res1 <- sifAll1
   res2 <- sifAll2
 
-  for(ii in 1:length(res2)){
+  for(ii in seq_len(length(res2))){
 
     if(ii == 1){
 
@@ -117,7 +117,7 @@ read_solution_cplex_single <- function(variables = variables,
 
       currSIF <- unique(res2[[ii]])
 
-      for(jj in 1:nrow(currSIF)){
+      for(jj in seq_len(nrow(currSIF))){
 
         ss <- currSIF[jj, 1]
         tt <- currSIF[jj, 3]
@@ -147,7 +147,7 @@ read_solution_cplex_single <- function(variables = variables,
   }
 
   domains <- rep("", nrow(combSIF))
-  for(ii in 1:nrow(combSIF)){
+  for(ii in seq_len(nrow(combSIF))){
 
     ss <- combSIF[ii, 1]
     tt <- combSIF[ii, 3]
@@ -160,13 +160,13 @@ read_solution_cplex_single <- function(variables = variables,
 
     if(length(idx)>0){
 
-      for(jj in 1:length(idx)){
+      for(jj in seq_len(length(idx))){
 
         ss2 <- bg$pfam_source[idx[jj]]
         tt2 <- bg$pfam_target[idx[jj]]
 
         counts <- 0
-        for(kk in 1:length(res1)){
+        for(kk in seq_len(length(res1))){
 
           idx3 <- which(res1[[kk]][, 1]==ss2)
           idx4 <- which(res1[[kk]][, 3]==tt2)

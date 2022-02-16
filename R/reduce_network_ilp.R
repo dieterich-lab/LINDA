@@ -39,12 +39,12 @@ reduce_network_ilp <- function(sif = sif, lambda = 30, solverPath){
     uSpecies <- unique(c(sif[, 1], sif[, 3]))
 
     cc1 <- c()
-    for(ii in 1:length(uSpecies)){
+    for(ii in seq_len(length(uSpecies))){
 
       idx <- which(sif[, 1]==uSpecies[ii])
       if(length(idx)>0){
 
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
 
           if(jj==1){
 
@@ -65,12 +65,12 @@ reduce_network_ilp <- function(sif = sif, lambda = 30, solverPath){
     }
 
     cc2 <- c()
-    for(ii in 1:length(uSpecies)){
+    for(ii in seq_len(length(uSpecies))){
 
       idx <- which(sif[, 3]==uSpecies[ii])
       if(length(idx)>0){
 
-        for(jj in 1:length(idx)){
+        for(jj in seq_len(length(idx))){
 
           if(jj==1){
 
@@ -142,7 +142,7 @@ reduce_network_ilp <- function(sif = sif, lambda = 30, solverPath){
     cplexSolution <- xmlToList(cplexSolutionData)
     cplexSolution <- cplexSolution$CPLEXSolution[[4]]
     functional_reactions <- c()
-    for(ii in 1:length(cplexSolution)){
+    for(ii in seq_len(length(cplexSolution))){
 
       currEdge <- cplexSolution[[ii]]
       if(currEdge[3]=="1"){

@@ -12,21 +12,18 @@ Authors@R: c(
 Description: A method that combines estimated Transcription Factor activities with Alternative Splicing analysis and prior knowledge of protein-protein and domain-domain interactions in order to infer upstream protein regulatory networks.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 RoxygenNote: 7.1.1
 Depends:
-    R (>= 4.0)
+    R (>= 4.1.0)
 Imports:
     readxl,
     readr,
     XML,
     igraph,
-    dplyr,
-    plyr,
-    tidyverse,
     rmarkdown,
     qpdf
-biocViews: Transcription, DifferentialSplicing, GeneExpression, NetworkInference
+biocViews: AlternativeSplicing, GeneSetEnrichment, GeneTarget, NetworkEnrichment, Network
 Suggests: 
     knitr
 VignetteBuilder: knitr
