@@ -2,7 +2,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
                                    background.network = background.network,
                                    pValThresh = pValThresh){
 
-  c if(!is.null(as.input)){
+  if(!is.null(as.input)){
     colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
   }
 
