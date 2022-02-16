@@ -32,11 +32,7 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
       fdr <- min(as$pval[which(as$exon_id==uTranscripts[ii])],
                  na.rm = TRUE)
-<<<<<<< Updated upstream
-      score <- max(as$IncLevelDifference[intersect(
-=======
       score <- min(as$IncLevelDifference[intersect(
->>>>>>> Stashed changes
         x = which(as$exon_id==uTranscripts[ii]),
         y = which(as$pval==fdr))],
         na.rm = TRUE)
