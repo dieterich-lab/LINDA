@@ -1,7 +1,7 @@
 # LINDA
 LINDA R-package - Enio GJERGA
 
-This repository contains the scripts for the ILP (Integer Linear Programming) implementation of the LINDA R package and accompanying scripts that implement the method. ILP is a mathematical optimisation algorithm in which the objective function and constraints are linear and the variables are integers.
+This repository contains the scripts for the ILP (Integer Linear Programming) implementation of the LINDA (Linear Integer programming for Network reconstruction using Transcriptomics and Differential splicing data Analysis) R package and accompanying scripts that implement the method. ILP is a mathematical optimisation algorithm in which the objective function and constraints are linear and the variables are integers.
 
 ### License
 
