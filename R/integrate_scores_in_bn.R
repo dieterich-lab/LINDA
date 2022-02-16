@@ -2,7 +2,10 @@ integrate_scores_in_bn <- function(as.input = as.input,
                                    background.network = background.network,
                                    pValThresh = pValThresh){
 
-  colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
+  c if(!is.null(as.input)){
+    colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
+  }
+
 
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
