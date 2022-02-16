@@ -131,7 +131,7 @@ CPLEX optimization parameters.
 
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = as.input, 
-                background.network = bg, solverPath = "~/Downloads/cplex", 
+                background.network = bg, solverPath = "/beegfs/homes/egjerga/cplex", 
                 input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
@@ -168,7 +168,7 @@ analysis as follows:
 
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = NULL, 
-                background.network = bg, solverPath = "~/Downloads/cplex", 
+                background.network = bg, solverPath = "/beegfs/homes/egjerga/cplex", 
                 input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
