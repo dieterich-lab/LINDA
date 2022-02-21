@@ -15,7 +15,7 @@ LINDA can be installed either locally by downloading its [source code](https://g
 #### devtools
 1.  Make sure [devtools](https://github.com/dieterich-lab/LINDA) is installed.
 2.  Start R.
-3.  Run `install_github("dieterich-lab/LINDA", build_vignettes = TRUE)`.
+3.  Run `install_github("dieterich-lab/LINDA", build_vignettes = TRUE)`. (**NOTE:** For the test example to run successfully, please put the _cplex_ executable file under the _/Downloads/_ directory. Otherwise set `build_vignettes = FALSE`).
 
 ### Documentation
 The LINDA pipeline and it prerequisites have been documented on its Vignettes. Also documentation about to test cases (one Toy example and one Real-case application) have been provided.
