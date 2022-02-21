@@ -68,15 +68,15 @@ library(XML)
 
 ### 2. Loading of a data-frame containing results from the alternative splicing/exon skipping analysis
 It is an object that must contain at least three colums with the following ID's:
-**transcript_id:** a transcript ID.
-**IncLevelDifference:** an inclusion level difference score normalized between 
+**exon_id:** a transcript ID.
+**effect:** an inclusion level difference score normalized between 
 -1 and 1 which can be obtained from methods which are used for the detection of
 differential AS from replicate RNA-Seq data (i.e. rMATS). This score holds the
 difference of exon inclusion levels when comparing two conditions, i.e. Cond1
 vs Cond2. A negative score is an indication of a skipping exon in Cond1
 compared to Cond2, while a positive score is an indication of a skipping exon
 in Cond2 compared to Cond1.
-**FDR:** this is as significance value associated with the IncLevelDifference
+**significance:** this is as significance value associated with the IncLevelDifference
 score. This also can be obtained from differential AS detection tools such as
 rMATS.
 
