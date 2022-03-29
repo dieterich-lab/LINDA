@@ -4,6 +4,7 @@ checkInputs <- function(input.scores = input.scores,
                         solverPath = solverPath,
                         input.node = input.node,
                         pValThresh = pValThresh,
+                        splice_effect_sign = splice_effect_sign,
                         top = top,
                         lambda1 = lambda1,
                         lambda2 = lambda2,
@@ -35,14 +36,13 @@ checkInputs <- function(input.scores = input.scores,
     if(!is.data.frame(as.input) ||
        ncol(as.input)<3 ||
        length(intersect(x = colnames(as.input),
-                        y = c("exon_id",
+                        y = c("id",
                               "effect",
                               "significance"))) < 3){
 
       stop("The 'as.input' object should either be NULL or a data-frame with
-            three columns and have at least c('exon_id',
-            'effect', 'significance') as column ID's. Please check your
-            inputs.")
+            three columns and have at least c('id','effect', 'significance')
+            as column ID's. Please check your inputs.")
 
     }
 
@@ -89,6 +89,15 @@ checkInputs <- function(input.scores = input.scores,
 
     stop("The 'pValThresh' parameter should be numeric. Please check your
          inputs.")
+
+  }
+
+  # splice_effect_sign parameters
+  if(length(intersect(x = splice_effect_sign, y = c("positive", "negative", "both"))) != 1 ||
+     !is.character(splice_effect_sign)){
+
+    stop("The 'splice_effect_sign' parameter should be a character of 'positive',
+         'negative' or 'both' value. Please check your inputs.")
 
   }
 

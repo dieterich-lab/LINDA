@@ -64,6 +64,7 @@ R-packages needed to for the analysis.
 library(LINDA)
 library(igraph)
 library(XML)
+library(aggregation)
 ```
 
 ### 2. Loading of a data-frame containing results from the alternative splicing/exon skipping analysis
@@ -131,7 +132,7 @@ CPLEX optimization parameters.
 
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = as.input, 
-                background.network = bg, solverPath = "/beegfs/homes/egjerga/cplex", 
+                background.network = bg, solverPath = "~/Downloads/cplex", 
                 input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
@@ -168,7 +169,7 @@ analysis as follows:
 
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = NULL, 
-                background.network = bg, solverPath = "/beegfs/homes/egjerga/cplex", 
+                background.network = bg, solverPath = "~/Downloads/cplex", 
                 input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 

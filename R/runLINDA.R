@@ -43,10 +43,22 @@
 #'have out-going interactions but no incoming ones.
 #'@param pValThresh (optional) a p-value threshold to indicate which are the
 #'significantly skipped exons. Those exons in which the corresponding FDR value
-#'(from as.input) falls below the pValThresh parameter and which has a negative
-#'IncLevelDifference score value, are considered to be skipped and such
-#'information will be integrated in the AS-constraints of the ILP formulation.
-#'By default, pValThresh=0.05.
+#'(from as.input) falls below the pValThresh parameter and which has a sign
+#'effect specified on the 'splice_effect_sign' argument are considered to be
+#'skipped and such information will be integrated in the AS-constraints of the
+#'ILP formulation. By default, pValThresh=0.05.
+#'#'@param splice_effect_sign (optional) a character indicating the sign of the
+#'splicing effect to consider for the analysis. It can either be
+#'splice_effect_sign="positive" (for the case when an exon should be considered
+#'as skipped when it crosses the significance threshold pValThresh and it has a
+#'positive sign effect/dPSI>0); splice_effect_sign="negative" (for the case when
+#'an exon should be considered as skipped when it crosses the significance
+#'threshold pValThresh and it has a negative sign effect/dPSI<0); or
+#'a positive effect/dPSI>0 should be considered); splice_effect_sign="negative"
+#'(for the case when only exon skipping event with a negative effect/dPSI>0
+#'splice_effect_sign="both" (for the case when an exon should be considered as
+#'skipped when it passes the significance threshold pValThresh, regardles of the
+#'sign effect). By default: splice_effect_sign="both".
 #'@param top (optional) a parameter indicating the number of TF's to be
 #'considered as significantly regulated based on the absolute highest activity
 #'value. The network solution must include as many of the top-regulated TF’s
@@ -123,6 +135,7 @@ runLINDA <- function(input.scores = input.scores,
                      solverPath = NULL,
                      input.node = NULL,
                      pValThresh = 0.05,
+                     splice_effect_sign = ("both"),
                      top = 50,
                      lambda1 = 100,
                      lambda2 = 1,
@@ -147,6 +160,7 @@ runLINDA <- function(input.scores = input.scores,
               solverPath = solverPath,
               input.node = input.node,
               pValThresh = pValThresh,
+              splice_effect_sign = splice_effect_sign,
               top = top,
               lambda1 = lambda1,
               lambda2 = lambda2,
@@ -167,7 +181,8 @@ runLINDA <- function(input.scores = input.scores,
   if(is.null(background_network_path)){
     bn <- prepare_bn(background.network = background.network,
                      as.input = as.input, input.node = input.node,
-                     input.scores = input.scores, pValThresh = pValThresh)
+                     input.scores = input.scores, pValThresh = pValThresh,
+                     splice_effect_sign = splice_effect_sign)
   } else {
     load(file = background_network_path)
   }

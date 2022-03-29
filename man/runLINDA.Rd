@@ -82,8 +82,18 @@ IncLevelDifference score value, are considered to be skipped and such
 information will be integrated in the AS-constraints of the ILP formulation.
 By default, pValThresh=0.05.}
 
-\item{pValThresh2}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
-defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.}
+\item{splice_effect_sign}{(optional) a character indicating the sign of the
+splicing effect to consider for the analysis. It can either be
+splice_effect_sign="positive" (for the case when an exon should be considered
+as skipped when it crosses the significance threshold pValThresh and it has a
+positive sign effect/dPSI>0); splice_effect_sign="negative" (for the case when
+an exon should be considered as skipped when it crosses the significance
+threshold pValThresh and it has a negative sign effect/dPSI<0); or
+a positive effect/dPSI>0 should be considered); splice_effect_sign="negative"
+(for the case when only exon skipping event with a negative effect/dPSI>0
+splice_effect_sign="both" (for the case when an exon should be considered as
+skipped when it passes the significance threshold pValThresh, regardles of the
+sign effect). By default: splice_effect_sign="both".}
 
 \item{top}{(optional) a parameter indicating the number of TF's to be
 considered as significantly regulated based on the absolute highest activity
@@ -97,8 +107,9 @@ higher value compared to other penalty parameters in order to strongly
 penalize the inclusion of not signifcantly regulated TF's. By default,
 lambda1=10.}
 
-\item{lambda2}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
-defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.}
+\item{lambda2}{the penalization terms of the secondary objective of the
+objective function - size penalty. The aim of this objective term is to
+penalize the inclusion of spurious DDI's in the final solution.}
 
 \item{mipgap}{CPLEX parameter which sets an absolute tolerance on the gap
 between the best integer objective and the objective of the best node

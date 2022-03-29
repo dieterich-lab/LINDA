@@ -22,7 +22,7 @@ Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.c
 
 #### 2. Package Depedencies
 Additionally before installation, the users must install the following R-package depedencies:
-[igraph](https://igraph.org/r/) and
+[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html) and
 [XML](https://cran.r-project.org/web/packages/XML/index.html).
 
 #### 3. Package installation
