@@ -32,7 +32,7 @@ Currently users can install LINDA directly from the source after downloading the
 
 ```R
 # directly from GitHub
-devtools::install_github("dieterich-lab/LINDA", build_vignettes = TRUE)
+devtools::install_github("dieterich-lab/LINDA", build_vignettes = FALSE)
 ```
 
 ```R
@@ -40,7 +40,7 @@ devtools::install_github("dieterich-lab/LINDA", build_vignettes = TRUE)
 install.packages('path_to_extracted_LINDA_directory', repos = NULL, type="source")
 ```
 
-**NOTE:** For the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory. Otherwise set ```build_vignettes = FALSE```).
+**NOTE:** If you wish for the the Vignettes to be built and for the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory and **only** then you can set ```build_vignettes = TRUE```).
 
 ## Running LINDA
 
