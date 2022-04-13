@@ -54,7 +54,7 @@ checkInputs <- function(input.scores = input.scores,
      length(intersect(x = colnames(background.network),
                       y = c("gene_source", "gene_target",
                             "pfam_source", "pfam_target",
-                            "exon_source", "exon_target"))) < 6){
+                            "id_source", "id_target"))) < 6){
 
     stop("The 'background.network' object should be a data-frame with at least 6
          columns and have at lease c('gene_source', 'gene_target',

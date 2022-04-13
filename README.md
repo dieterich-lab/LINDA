@@ -24,6 +24,7 @@ Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.c
 Additionally before installation, the users must install the following R-package depedencies:
 [igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html) and
 [XML](https://cran.r-project.org/web/packages/XML/index.html).
+[aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
 
 #### 3. Package installation
 Once the required solvers have been obtained and the mentioned R-package depedencies have been installed, then the users can proceed with the installation of LINDA.
@@ -51,6 +52,21 @@ library(LINDA)
 ```
 
 A documentation of the current version of the main _runLINDA()_ function can be obtained by simply typing ```?runLINDA``` in R once the package has been installed.
+
+In a real-case application, depending whether the users are using Transcript Abundance or Exons Skipping data to pinpoint for skipped domains in the analysis, please:
+
+```R
+## Load the DIGGER resource with domains mapped to Transcripts:
+load(file = system.file("extdata", "digger_human_transcripts.RData", package = "LINDA"))
+```
+
+, or:
+
+
+```R
+## Load the DIGGER resource with domains mapped to Exons:
+load(file = system.file("extdata", "digger_human_exons.RData", package = "LINDA"))
+```
 
 ## Examples
 

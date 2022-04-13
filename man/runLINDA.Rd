@@ -36,35 +36,47 @@ enrichment score.}
 \item{as.input}{a data-frame containing results from the alternative splicing/
 exon skipping analysis. It should contain at least three colums with the
 following ID's:
-transcript_id: a transcript ID.
-IncLevelDifference: an inclusion level difference score normalized between -1
-and 1 which can be obtained from methods which are used for the detection of
-differential AS from replicate RNA-Seq data (i.e. rMATS). This score holds the
-difference of exon inclusion levels when comparing two conditions, i.e. Cond1
-vs Cond2. A negative score is an indication of a skipping exon in Cond1
-compared to Cond2, while a positive score is an indication of a skipping exon
-in Cond2 compared to Cond1.
-FDR: this is as significance value associated with the IncLevelDifference
-score. This also can be obtained from differential AS detection tools such as
-rMATS.
+id: a transcript/exon ID.
+effect: an exon inclusion level difference score / logFC transcript expression
+which can be obtained from methods which are used for the detection of
+differential AS from replicate RNA-Seq data (i.e. rMATS, MAJIQ, etc.) / methods
+for the analysis of differential transcript expression values.
+significance: this is as significance value associated with the 'effect'
+score. This also can be obtained from differential ES detection tools or from
+differential transcript expression analysis.
 By default, this parameter is set to NULL which means that LINDA will perform
 a splice-un-aware inference of upstream regulatory networks.}
 
 \item{background.network}{data frame of the prior knowledge network of
 protein-protein (ppi) and domain-domain (ddi) interactions. The data-frame
 should contain at lease 6 columns with the following ID's:
-gene_source: gene names of the interaction sources in the PPI.
-gene_target: gene names of the interaction targets in the PPI.
+id_source: exon/transcript ID's mapping to the pfam and protein of the source
+interactions. In case multiple exons/transcript ID's map to a domain of a
+specific protein, then the multiple exons/transcripts are separated by an
+underscore symbol - '_'.
+id_target: exon/transcript ID's mapping to the pfam and protein of the target
+interactions. In case multiple exons/transcript ID's map to a domain of a
+specific protein, then the multiple exons/transcripts are separated by an
+underscore symbol - '_'.
 pfam_source: pfam domain ID's of the interaction sources in the DDI.
 pfam_target: pfam domain ID's of the interaction targets in the DDI.
-exon_source:transcript ID's mapping to the pfam and protein of the source
-interactions. In case multiple transcript ID's map to a domain of a specific
-protein, then the multiple transcripts are separated by an underscore symbol -
-'_'.
-exon_target:transcript ID's mapping to the pfam and protein of the target
-interactions. In case multiple transcript ID's map to a domain of a specific
-protein, then the multiple transcripts are separated by an underscore symbol -
-'_'.}
+gene_source: gene names of the interaction sources in the PPI.
+gene_target: gene names of the interaction targets in the PPI.
+
+In case you using Transcricripts, please load the DIGGER resource with domains
+mapped to transcripts:
+load(file = system.file("extdata",
+                        "digger_human_transcripts.RData",
+                        package = "LINDA"))
+
+In case you using Exons, please load the DIGGER resource with domains
+mapped to exons:
+load(file = system.file("extdata",
+                        "digger_human_exons.RData",
+                        package = "LINDA"))
+
+
+}
 
 \item{solverPath}{(optional) location path to the desired solver. By default,
 the path to the cplex solver is set to: solverPath = "/usr/bin/cplex"}
@@ -77,20 +89,19 @@ have out-going interactions but no incoming ones.}
 
 \item{pValThresh}{(optional) a p-value threshold to indicate which are the
 significantly skipped exons. Those exons in which the corresponding FDR value
-(from as.input) falls below the pValThresh parameter and which has a negative
-IncLevelDifference score value, are considered to be skipped and such
-information will be integrated in the AS-constraints of the ILP formulation.
-By default, pValThresh=0.05.}
+(from as.input) falls below the pValThresh parameter, are considered to be
+skipped and such information will be integrated in the AS-constraints of the ILP
+formulation. By default, pValThresh=0.05.}
 
 \item{splice_effect_sign}{(optional) a character indicating the sign of the
 splicing effect to consider for the analysis. It can either be
 splice_effect_sign="positive" (for the case when an exon should be considered
 as skipped when it crosses the significance threshold pValThresh and it has a
-positive sign effect/dPSI>0); splice_effect_sign="negative" (for the case when
+positive sign effect>0); splice_effect_sign="negative" (for the case when
 an exon should be considered as skipped when it crosses the significance
-threshold pValThresh and it has a negative sign effect/dPSI<0); or
-a positive effect/dPSI>0 should be considered); splice_effect_sign="negative"
-(for the case when only exon skipping event with a negative effect/dPSI>0
+threshold pValThresh and it has a negative sign effect<0); or
+a positive effect>0 should be considered); splice_effect_sign="negative"
+(for the case when only exon skipping event with a negative effect>0
 splice_effect_sign="both" (for the case when an exon should be considered as
 skipped when it passes the significance threshold pValThresh, regardles of the
 sign effect). By default: splice_effect_sign="both".}
@@ -105,41 +116,42 @@ regulated.By default set to top=50. When considering all TF's, then top="all".}
 function - TF inclusion. This penalty factor is suggested to be set to a
 higher value compared to other penalty parameters in order to strongly
 penalize the inclusion of not signifcantly regulated TF's. By default,
-lambda1=10.}
+lambda1=100.}
 
 \item{lambda2}{the penalization terms of the secondary objective of the
 objective function - size penalty. The aim of this objective term is to
-penalize the inclusion of spurious DDI's in the final solution.}
+penalize the inclusion of spurious DDI's in the final solution. By default,
+lambda1=1.}
 
 \item{mipgap}{CPLEX parameter which sets an absolute tolerance on the gap
 between the best integer objective and the objective of the best node
 remaining. When this difference falls below the value of this parameter, the
-mixed integer optimization is stopped. By default, mipgap=0.001.}
+mixed integer optimization is stopped. By default, mipgap=0.}
 
 \item{relgap}{CPLEX parameter which sets a relative tolerance on the objective
 value for the solutions in the solution pool. Solutions that are worse (either
 greater in the case of a minimization, or less in the case of a maximization)
 than the incumbent solution by this measure are not kept in the solution pool.
-By default, relgap=0.001 (or 0.1 percent), meaning that then solutions worse
-than the incumbent by 0.1 percent or more will be discarded.}
+For example, if relgap=0.001 (or 0.1 percent), meaning that then solutions worse
+than the incumbent by 0.1 percent or more will be discarded. By default,
+relgap=0.}
 
 \item{populate}{CPLEX parameter which sets the maximum number of mixed integer
 programming (MIP) solutions generated for the solution pool during each call
 to the populate procedure. Populate stops when it has generated the amount of
-solutions set in this parameter. By default, populate=1000.}
+solutions set in this parameter. By default, populate=500.}
 
 \item{nSolutions}{the number of solutions to be provided by LINDA. By default,
 nSolutions=100.}
 
 \item{timelimit}{CPLEX parameter which sets the maximum optimization time in
-seconds.}
+seconds. By default, timelimit=3600.}
 
 \item{intensity}{CPLEX parameter which controls the trade-off between the
 number of solutions generated for the solution pool and the amount of time or
 memory consumed. Values from 1 to 4 invoke increasing effort to find larger
 numbers of solutions. Higher values are more expensive in terms of time and
-memory but are likely to yield more solutions. By default, intensity=0 (let
-CPLEX choose).}
+memory but are likely to yield more solutions. By default, intensity=1.}
 
 \item{replace}{CPLEX parameter which designates the strategy for replacing a
 solution in the solution pool when the solution pool has reached its capacity.
@@ -147,6 +159,11 @@ The value 0 replaces solutions according to a first-in, first-out policy. The
 value 1 keeps the solutions with the best objective values. The value 2
 replaces solutions in order to build a set of diverse solutions. By default,
 replace=1.}
+
+\item{threads}{CPLEX parameter which manage the number of threads that CPLEX
+uses. By default, threads=0 (let CPLEX decide). The number of threads that CPLEX
+uses is no more than the number of CPU cores available on the computer where
+CPLEX is running.}
 
 \item{condition}{a parameter which can be used in the case when LINDA is
 desirde to run over multiple analyses in parallel. It is useful to distinguish
@@ -156,7 +173,13 @@ solutions obtained. By default, conditions=1.}
 \item{solver}{a character parameter indicating the type of solver to be used.
 It can only take three different values ('lpSolve', 'cplex' and 'cbc')
 depending on the type of solver the user wishes to use. By default,
-solver='lpSolve'.}
+solver='cplex'.}
+
+\item{solver}{a character parameter indicating the type of solver to be used.
+It can only take three different values ('lpSolve', 'cplex' and 'cbc')
+depending on the type of solver the user wishes to use. By default,
+solver='cplex'.}
+
 }
 \value{
 Results list containing each of the LINDA unique solutions as well as
@@ -178,5 +201,10 @@ res <- runLINDA(input.scores = input.scores, as.input = as.input, background.net
 solverPath = "~/Downloads/cplex", input.node = NULL, pValThresh = 0.05, top = 2,
 lambda1 = 10, lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
+## In case you using Transcricripts, please load the DIGGER resource with domains mapped to transcripts:
+# load(file = system.file("extdata", "digger_human_transcripts.RData", package = "LINDA"))
+
+## In case you using Exons, please load the DIGGER resource with domains mapped to exons:
+# load(file = system.file("extdata", "digger_human_exons.RData", package = "LINDA"))
 
 }
