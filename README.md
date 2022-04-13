@@ -40,7 +40,7 @@ devtools::install_github("dieterich-lab/LINDA", build_vignettes = FALSE)
 install.packages('path_to_extracted_LINDA_directory', repos = NULL, type="source")
 ```
 
-**NOTE:** If you wish for the the Vignettes to be built and for the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory and **only** then you can set ```build_vignettes = TRUE```).
+**NOTE:** If you wish for the the Vignettes to be built and for the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory and **only** then you can set ```build_vignettes = TRUE```.
 
 ## Running LINDA
 
