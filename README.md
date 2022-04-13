@@ -22,9 +22,8 @@ Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.c
 
 #### 2. Package Depedencies
 Additionally before installation, the users must install the following R-package depedencies:
-[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html) and
-[XML](https://cran.r-project.org/web/packages/XML/index.html).
-[aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
+[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html),
+[XML](https://cran.r-project.org/web/packages/XML/index.html) and [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
 
 #### 3. Package installation
 Once the required solvers have been obtained and the mentioned R-package depedencies have been installed, then the users can proceed with the installation of LINDA.
