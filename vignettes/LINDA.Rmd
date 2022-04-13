@@ -64,6 +64,7 @@ R-packages needed to for the analysis.
 library(LINDA)
 library(igraph)
 library(XML)
+library(aggregation)
 ```
 
 ### 2. Loading of a data-frame containing results from the alternative splicing/exon skipping analysis

@@ -18,12 +18,13 @@ Once the solvers has been acquired by the user, they must save the executable fi
 
 Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.coin-or.org/Cbc) as well as the [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html) R-package for smaller case studies.
 
-**NOTE:** We strongly encourage using cplex to solve the LINDA problems since the tool has been mostly maintained by considering CPLEX in mind and also because it showed to be more efficient computationally.
+**NOTE:** We strongly encourage using CPLEX to solve the LINDA problems since the tool has been mostly maintained by considering CPLEX in mind and also because it showed to be more efficient computationally.
 
 #### 2. Package Depedencies
 Additionally before installation, the users must install the following R-package depedencies:
-[igraph](https://igraph.org/r/) and
+[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html) and
 [XML](https://cran.r-project.org/web/packages/XML/index.html).
+[aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
 
 #### 3. Package installation
 Once the required solvers have been obtained and the mentioned R-package depedencies have been installed, then the users can proceed with the installation of LINDA.
@@ -31,9 +32,16 @@ Once the required solvers have been obtained and the mentioned R-package depeden
 Currently users can install LINDA directly from the source after downloading the source (tar file) and typing in ```R``` command line the following:
 
 ```R
+# directly from GitHub
+devtools::install_github("dieterich-lab/LINDA", build_vignettes = TRUE)
+```
+
+```R
 # or download the source file from GitHub and install from source
 install.packages('path_to_extracted_LINDA_directory', repos = NULL, type="source")
 ```
+
+**NOTE:** For the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory. Otherwise set ```build_vignettes = FALSE```).
 
 ## Running LINDA
 
@@ -45,10 +53,21 @@ library(LINDA)
 
 A documentation of the current version of the main _runLINDA()_ function can be obtained by simply typing ```?runLINDA``` in R once the package has been installed.
 
+In a real-case application, depending whether the users are using Transcript Abundance or Exons Skipping data to pinpoint for skipped domains in the analysis, please:
+
+```R
+## Load the DIGGER resource with domains mapped to Transcripts:
+load(file = system.file("extdata", "digger_human_transcripts.RData", package = "LINDA"))
+```
+
+, or:
+
+
+```R
+## Load the DIGGER resource with domains mapped to Exons:
+load(file = system.file("extdata", "digger_human_exons.RData", package = "LINDA"))
+```
+
 ## Examples
 
 A current example of how to use LINDA over a small Toy test example is ducumented in the vignettes of the package. For this, please check on the LINDA package [documentation](https://github.com/dieterich-lab/LINDA/blob/main/doc/LINDA.html). Another real case example can be found [here](https://github.com/enio23/LINDA_Example)
-
-
-
-**!! Repo Under Construction !!**

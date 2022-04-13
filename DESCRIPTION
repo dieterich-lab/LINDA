@@ -15,13 +15,14 @@ Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.1.1
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.0.0)
 Imports:
     readxl,
     readr,
     XML,
     igraph,
     rmarkdown,
+    aggregation,
     qpdf
 biocViews: AlternativeSplicing, GeneSetEnrichment, GeneTarget, NetworkEnrichment, Network
 Suggests: 
