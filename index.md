@@ -24,4 +24,4 @@ The LINDA pipeline and it prerequisites have been documented on its Vignettes. A
 
 ### Support or Contact
 
-Having trouble with LINDA? You can open an Issue on the dedicated [LINDA repository](https://github.com/dieterich-lab/LINDA), or simply drop us an email on [E.Gjerga@uni-heidelberg.de](E.Gjerga@uni-heidelberg.de) & [Christoph.Dieterich@uni-heidelberg.de](Christoph.Dieterich@uni-heidelberg.de) and we’ll help you sort it out.
+Having trouble with LINDA? You can open an Issue on the dedicated [LINDA repository](https://github.com/dieterich-lab/LINDA), or simply drop us an email on **E.Gjerga@uni-heidelberg.de** & **Christoph.Dieterich@uni-heidelberg.de** and we’ll help you sort it out.
