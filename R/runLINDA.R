@@ -199,7 +199,7 @@ runLINDA <- function(input.scores = input.scores,
                      background.network = bg,
                      solverPath = NULL,
                      input.node = NULL,
-                     pValThresh = 0.05,
+                     pValThresh = NULL,
                      splice_effect_sign = "both",
                      top = 50,
                      lambda1 = 100,
@@ -252,16 +252,33 @@ runLINDA <- function(input.scores = input.scores,
   # print("Writing objective function and constraints. Please wait.")
   variables <- create_variables(background.network = bn$background.network)
 
-  objective.function <- write_objective_function(background.network =
-                                                   bn$background.network,
-                                                 variables =
-                                                   variables,
-                                                 input.scores =
-                                                   input.scores,
-                                                 lambda1 =
-                                                   lambda1,
-                                                 lambda2 =
-                                                   lambda2)
+  if(is.null(pValThresh)){
+
+    objective.function <- write_objective_function_soft(background.network =
+                                                          bn$background.network,
+                                                        variables =
+                                                          variables,
+                                                        input.scores =
+                                                          input.scores,
+                                                        lambda1 =
+                                                          lambda1,
+                                                        lambda2 =
+                                                          lambda2)
+
+  } else {
+
+    objective.function <- write_objective_function(background.network =
+                                                     bn$background.network,
+                                                   variables =
+                                                     variables,
+                                                   input.scores =
+                                                     input.scores,
+                                                   lambda1 =
+                                                     lambda1,
+                                                   lambda2 =
+                                                     lambda2)
+
+  }
 
   allC <- write_all_constraints(variables = variables,
                                 bn = bn,
