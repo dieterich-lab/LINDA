@@ -21,6 +21,7 @@ LINDA can be installed either locally by downloading its [source code](https://g
 The LINDA pipeline and it prerequisites have been documented on its Vignettes. Also documentation about to test cases (one Toy example and one Real-case application) have been provided.
 1.  For an explanation of the LINDA pipeline and a to run a small Toy test case-study, you can check the vignettes by simply running: `vignette("LINDA")`.
 2.  Also a step-by-step explanation of LINDA application over a real case-study has been provided in: [https://github.com/enio23/LINDA_Example](https://github.com/enio23/LINDA_Example).
+3.  Codes for running LINDA over the [ENCORE](https://www.encodeproject.org/encore-matrix/?type=Experiment&status=released&internal_tags=ENCORE) project data habe been made vailable in: [https://github.com/enio23/LINDA_ENCORE](https://github.com/enio23/LINDA_ENCORE).
 
 ### Support or Contact
 
