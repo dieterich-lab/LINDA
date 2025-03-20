@@ -2,8 +2,7 @@ prepare_bn <- function(background.network = NULL,
                        as.input = NULL,
                        input.node = NULL,
                        input.scores = NULL,
-                       pValThresh = NULL,
-                       splice_effect_sign = NULL){
+                       pValThresh = NULL){
 
   print("Processing the Background Network..")
 
@@ -60,17 +59,17 @@ prepare_bn <- function(background.network = NULL,
   adj <- get.adjacency(graph = gg)
   tf <- input.scores$id
 
-  targetPx<-rep(NA,2)
+  targetPaths<-rep(NA,2)
   sP <- get.all.shortest.paths(graph = gg,
                                from = which(rownames(adj)==input.node[1]),
                                to = which(rownames(adj)%in%tf),
                                mode = "out",
                                weights = NA)
-  Px<-lapply(sP$res, function(x){return(V(gg)$name[x])})
-  Px.l<-lapply(Px, length)
-  Px.l<-unlist(Px.l)
-  Px<-Px[which(Px.l <= 7)]
-  Px<-lapply(Px, function(x){if(length(x) == 2){return(x)};
+  Paths<-lapply(sP$res, function(x){return(V(gg)$name[x])})
+  Paths.l<-lapply(Paths, length)
+  Paths.l<-unlist(Paths.l)
+  Paths<-Paths[which(Paths.l <= 7)]
+  Paths<-lapply(Paths, function(x){if(length(x) == 2){return(x)};
     if(length(x) == 3){return(rbind(x[1:2], x[2:3]))};
     if(length(x) == 4){
       return(rbind(x[1:2], x[2:3], x[3:4]))
@@ -85,25 +84,25 @@ prepare_bn <- function(background.network = NULL,
       return(rbind(x[1:2], x[2:3], x[3:4], x[4:5]))}
   })
 
-  if(length(Px) != 0){
-    if(length(Px) > 1){
-      for(i in 2:length(Px)){
-        Px[[i]]<-rbind(Px[[i-1]], Px[[i]])
+  if(length(Paths) != 0){
+    if(length(Paths) > 1){
+      for(i in 2:length(Paths)){
+        Paths[[i]]<-rbind(Paths[[i-1]], Paths[[i]])
       }
     }
-    targetPx<-rbind(targetPx, Px[[length(Px)]])
+    targetPaths<-rbind(targetPaths, Paths[[length(Paths)]])
   }
-  targetPx <- targetPx[2:nrow(targetPx), ]
-  targetPx <- unique(targetPx)
+  targetPaths <- targetPaths[2:nrow(targetPaths), ]
+  targetPaths <- unique(targetPaths)
 
-  interactions1 <- targetPx
+  interactions1 <- targetPaths
 
   ## Shortest paths between intermediate nodes
   uSpecies <- unique(c(interactions1[, 1], interactions1[, 2]))
   intNodes <- setdiff(x = uSpecies, y = c(input.node, tf))
   targetVn<-match(intNodes, V(gg)$name)
 
-  targetPx<-rep(NA,2)
+  targetPaths<-rep(NA,2)
   for(ii in seq_len(length(intNodes))){
 
     # print(paste0("Step -- ", ii, "/", length(intNodes)))
@@ -112,29 +111,29 @@ prepare_bn <- function(background.network = NULL,
                                  to = targetVn[-ii],
                                  mode = "out",
                                  weights = NA)
-    Px<-lapply(sP$res, function(x){return(V(gg)$name[x])})
-    Px.l<-lapply(Px, length)
-    Px.l<-unlist(Px.l)
-    Px<-Px[which(Px.l <= 3)]
-    Px<-lapply(Px, function(x){if(length(x) == 2){return(x)};
+    Paths<-lapply(sP$res, function(x){return(V(gg)$name[x])})
+    Paths.l<-lapply(Paths, length)
+    Paths.l<-unlist(Paths.l)
+    Paths<-Paths[which(Paths.l <= 3)]
+    Paths<-lapply(Paths, function(x){if(length(x) == 2){return(x)};
       if(length(x) == 3){return(rbind(x[1:2], x[2:3]))}
     })
 
-    if(length(Px) != 0){
-      if(length(Px) > 1){
-        for(i in 2:length(Px)){
-          Px[[i]]<-rbind(Px[[i-1]], Px[[i]])
+    if(length(Paths) != 0){
+      if(length(Paths) > 1){
+        for(i in 2:length(Paths)){
+          Paths[[i]]<-rbind(Paths[[i-1]], Paths[[i]])
         }
       }
-      targetPx<-rbind(targetPx, Px[[length(Px)]])
+      targetPaths<-rbind(targetPaths, Paths[[length(Paths)]])
     }
-    # targetPx <- targetPx[-c(1), ]
-    targetPx <- unique(targetPx)
+    # targetPaths <- targetPaths[-c(1), ]
+    targetPaths <- unique(targetPaths)
 
   }
 
-  targetPx <- unique(targetPx[2:nrow(targetPx), ])
-  interactions2 <- targetPx
+  targetPaths <- unique(targetPaths[2:nrow(targetPaths), ])
+  interactions2 <- targetPaths
 
   interactions <- unique(rbind(interactions1, interactions2))
   reacs1 <- paste0(interactions[, 1], "=", interactions[, 2])
@@ -146,20 +145,9 @@ prepare_bn <- function(background.network = NULL,
   bg2keep <- background.network[idx2keep, ]
 
   ## Integrate the scores
-  if(is.null(pValThresh)){
-
-    background.network <- integrate_scores_in_bn_soft(as.input = as.input,
-                                                      background.network = bg2keep,
-                                                      splice_effect_sign = splice_effect_sign)
-
-  } else {
-
-    background.network <- integrate_scores_in_bn_hard(as.input = as.input,
-                                                      background.network = bg2keep,
-                                                      pValThresh = pValThresh,
-                                                      splice_effect_sign = splice_effect_sign)
-
-  }
+  background.network <- integrate_scores_in_bn(as.input = as.input,
+                                               background.network = bg2keep,
+                                               pValThresh = pValThresh)
 
   ## Now return the output
   returnList <- list()
