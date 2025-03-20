@@ -10,11 +10,14 @@ write_as_constraints <- function(background.network = background.network,
 
   } else {
 
-    idx1 <- which(background.network$source_fdr<=pValThresh)
-    idx2 <- which(background.network$source_score<=0)
-    idx3 <- which(background.network$target_fdr<=pValThresh)
-    idx4 <- which(background.network$target_score<=0)
-    idx <- c(intersect(x = idx1, y = idx2), intersect(x = idx4, y = idx3))
+    # idx1 <- which(background.network$source_fdr<=pValThresh)
+    # idx2 <- which(background.network$source_score<=0)
+    # idx3 <- which(background.network$target_fdr<=pValThresh)
+    # idx4 <- which(background.network$target_score<=0)
+    # idx <- c(intersect(x = idx1, y = idx2), intersect(x = idx4, y = idx3))
+
+    idx <- intersect(x = which(background.network$min_fdr<=pValThresh),
+                     y = which(background.network$min_score<0))
 
     if(length(idx)==0){
       cc <- NULL

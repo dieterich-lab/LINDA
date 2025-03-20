@@ -22,9 +22,8 @@ Soon LINDA is also to run by using the open-source [Coin-Cbc](https://projects.c
 
 #### 2. Package Depedencies
 Additionally before installation, the users must install the following R-package depedencies:
-[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html) and
-[XML](https://cran.r-project.org/web/packages/XML/index.html).
-[aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
+[igraph](https://igraph.org/r/), [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html),
+[XML](https://cran.r-project.org/web/packages/XML/index.html) and [aggregation](https://cran.r-project.org/web/packages/aggregation/index.html).
 
 #### 3. Package installation
 Once the required solvers have been obtained and the mentioned R-package depedencies have been installed, then the users can proceed with the installation of LINDA.
@@ -33,7 +32,7 @@ Currently users can install LINDA directly from the source after downloading the
 
 ```R
 # directly from GitHub
-devtools::install_github("dieterich-lab/LINDA", build_vignettes = TRUE)
+devtools::install_github("dieterich-lab/LINDA", build_vignettes = FALSE)
 ```
 
 ```R
@@ -41,7 +40,7 @@ devtools::install_github("dieterich-lab/LINDA", build_vignettes = TRUE)
 install.packages('path_to_extracted_LINDA_directory', repos = NULL, type="source")
 ```
 
-**NOTE:** For the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory. Otherwise set ```build_vignettes = FALSE```).
+**NOTE:** If you wish for the the Vignettes to be built and for the test example to run successfully, please put the _cplex_ executable file under the /Downloads/ directory and **only** then you can set ```build_vignettes = TRUE```.
 
 ## Running LINDA
 

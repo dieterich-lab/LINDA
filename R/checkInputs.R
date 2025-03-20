@@ -84,13 +84,14 @@ checkInputs <- function(input.scores = input.scores,
 
   }
 
-  if(!is.numeric(pValThresh) ||
-     length(pValThresh) != 1){
-
-    stop("The 'pValThresh' parameter should be numeric. Please check your
-         inputs.")
-
-  }
+  # if(!is.numeric(pValThresh) ||
+  #    length(pValThresh) != 1 || !is.null(pValThresh)){
+  #
+  #   stop("The 'pValThresh' parameter should either be numeric for the
+  #   hard-constrained version of LINDA or set to NULL for the soft-constrained
+  #   analyses. Please check your inputs.")
+  #
+  # }
 
   if(!is.numeric(top)){
 
