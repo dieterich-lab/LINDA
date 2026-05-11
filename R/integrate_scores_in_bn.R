@@ -1,8 +1,11 @@
 integrate_scores_in_bn <- function(as.input = as.input,
                                    background.network = background.network,
-                                   pValThresh = pValThresh){
+                                   pValThresh = pValThresh,
+                                   splice_effect_sign = splice_effect_sign){
 
-  colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
+  if(!is.null(as.input)){
+    colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
+  }
 
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
@@ -27,58 +30,98 @@ integrate_scores_in_bn <- function(as.input = as.input,
 
     as <- as.input
 
-    uTranscripts <- unique(as$exon_id)
-    for(ii in seq_len(length(uTranscripts))){
+    for(ii in seq_len(nrow(background.network))){
 
-      fdr <- min(as$pval[which(as$exon_id==uTranscripts[ii])],
-                 na.rm = TRUE)
-      score <- min(as$IncLevelDifference[intersect(
-        x = which(as$exon_id==uTranscripts[ii]),
-        y = which(as$pval==fdr))],
-        na.rm = TRUE)
-
-      idx <- which(grepl(pattern = uTranscripts[ii],
-                         x = background.network$exon_source,
-                         fixed = TRUE))
+      # source
+      transcripts <- unique(unlist(strsplit(x = background.network$exon_source[ii], split = "_", fixed = TRUE)))
+      idx <- which(as$exon_id%in%transcripts)
       if(length(idx)>0){
-        for(jj in seq_len(length(idx))){
-          if(fdr < source_fdr[idx[jj]]){
-            source_score[idx[jj]] <- score
-            source_fdr[idx[jj]] <- fdr
-          }
-        }
+
+        source_score[ii] <- mean(as$IncLevelDifference[idx])
+        source_fdr[ii] <- fisher(as$pval[idx])
+
       }
 
-      idx <- which(grepl(pattern = uTranscripts[ii],
-                         x = background.network$exon_target,
-                         fixed = TRUE))
+      # target
+      transcripts <- unique(unlist(strsplit(x = background.network$exon_target[ii], split = "_", fixed = TRUE)))
+      idx <- which(as$exon_id%in%transcripts)
       if(length(idx)>0){
-        for(jj in seq_len(length(idx))){
-          if(fdr < target_fdr[idx[jj]]){
-            target_score[idx[jj]] <- score
-            target_fdr[idx[jj]] <- fdr
-          }
-        }
+
+        target_score[ii] <- mean(as$IncLevelDifference[idx])
+        target_fdr[ii] <- fisher(as$pval[idx])
+
       }
 
     }
 
-    min_score <- rep("", nrow(background.network))
-    min_fdr <- rep("", nrow(background.network))
-    for(ii in 1:nrow(background.network)){
+    if(splice_effect_sign == "negative"){
 
-      if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
-        min_score[ii] <- source_score[ii]
-        min_fdr[ii] <- source_fdr[ii]
-      } else {
-        if(target_score[ii]<0 && target_fdr[ii]<pValThresh){
-          min_score[ii] <- target_score[ii]
-          min_fdr[ii] <- target_fdr[ii]
+      min_score <- rep("", nrow(background.network))
+      min_fdr <- rep("", nrow(background.network))
+      for(ii in 1:nrow(background.network)){
+
+        if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
+          min_score[ii] <- -1
+          min_fdr[ii] <- source_fdr[ii]
         } else {
-          min_score[ii] <- max(source_score[ii], target_score[ii])
-          min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+          if(target_score[ii]<0 && target_fdr[ii]<pValThresh){
+            min_score[ii] <- -1
+            min_fdr[ii] <- target_fdr[ii]
+          } else {
+            min_score[ii] <- 1
+            min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+          }
         }
       }
+
+    } else {
+
+      if(splice_effect_sign == "positive"){
+
+        min_score <- rep("", nrow(background.network))
+        min_fdr <- rep("", nrow(background.network))
+        for(ii in 1:nrow(background.network)){
+
+          if(source_score[ii]>0 && source_fdr[ii]<pValThresh){
+            min_score[ii] <- -1
+            min_fdr[ii] <- source_fdr[ii]
+          } else {
+            if(target_score[ii]>0 && target_fdr[ii]<pValThresh){
+              min_score[ii] <- -1
+              min_fdr[ii] <- target_fdr[ii]
+            } else {
+              min_score[ii] <- 1
+              min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+            }
+          }
+        }
+
+      } else {
+
+        if(splice_effect_sign == "both"){
+
+          min_score <- rep("", nrow(background.network))
+          min_fdr <- rep("", nrow(background.network))
+          for(ii in 1:nrow(background.network)){
+
+            if(source_fdr[ii]<pValThresh){
+              min_score[ii] <- -1
+              min_fdr[ii] <- source_fdr[ii]
+            } else {
+              if(target_fdr[ii]<pValThresh){
+                min_score[ii] <- -1
+                min_fdr[ii] <- target_fdr[ii]
+              } else {
+                min_score[ii] <- 1
+                min_fdr[ii] <- max(source_fdr[ii], target_fdr[ii])
+              }
+            }
+          }
+
+        }
+
+      }
+
     }
 
     background.network$source_score <- source_score
