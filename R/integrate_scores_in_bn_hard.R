@@ -3,10 +3,6 @@ integrate_scores_in_bn_hard <- function(as.input = as.input,
                                         pValThresh = pValThresh,
                                         splice_effect_sign = splice_effect_sign){
 
-  if(!is.null(as.input)){
-    colnames(as.input) <- c("exon_id", "IncLevelDifference", "pval")
-  }
-
   # print("Integrating AS scores in the Background Network..")
   source_score <- rep(0, nrow(background.network))
   target_score <- rep(0, nrow(background.network))
@@ -28,26 +24,38 @@ integrate_scores_in_bn_hard <- function(as.input = as.input,
 
   } else {
 
-    as <- as.input
+    as <- as.input[, c("id", "effect", "significance")]
+    colnames(as) <- c("exon_id", "IncLevelDifference", "pval")
+    as$IncLevelDifference <- as.numeric(as$IncLevelDifference)
+    as$pval <- as.numeric(as$pval)
+
+    idx <- which(!is.na(as$pval) & as$pval == 0)
+    if(length(idx) > 0){
+      as$pval[idx] <- 0.000001
+    }
 
     for(ii in seq_len(nrow(background.network))){
 
       # source
-      transcripts <- unique(unlist(strsplit(x = background.network$exon_source[ii], split = "_", fixed = TRUE)))
-      idx <- which(as$exon_id%in%transcripts)
-      if(length(idx)>0){
+      transcripts <- unique(unlist(strsplit(x = background.network$exon_source[ii],
+                                             split = "_", fixed = TRUE)))
+      idx <- which(as$exon_id %in% transcripts)
+      idx <- idx[!is.na(as$IncLevelDifference[idx]) & !is.na(as$pval[idx])]
+      if(length(idx) > 0){
 
-        source_score[ii] <- mean(as$IncLevelDifference[idx])
+        source_score[ii] <- mean(as$IncLevelDifference[idx], na.rm = TRUE)
         source_fdr[ii] <- fisher(as$pval[idx])
 
       }
 
       # target
-      transcripts <- unique(unlist(strsplit(x = background.network$exon_target[ii], split = "_", fixed = TRUE)))
-      idx <- which(as$exon_id%in%transcripts)
-      if(length(idx)>0){
+      transcripts <- unique(unlist(strsplit(x = background.network$exon_target[ii],
+                                             split = "_", fixed = TRUE)))
+      idx <- which(as$exon_id %in% transcripts)
+      idx <- idx[!is.na(as$IncLevelDifference[idx]) & !is.na(as$pval[idx])]
+      if(length(idx) > 0){
 
-        target_score[ii] <- mean(as$IncLevelDifference[idx])
+        target_score[ii] <- mean(as$IncLevelDifference[idx], na.rm = TRUE)
         target_fdr[ii] <- fisher(as$pval[idx])
 
       }
@@ -56,15 +64,15 @@ integrate_scores_in_bn_hard <- function(as.input = as.input,
 
     if(splice_effect_sign == "negative"){
 
-      min_score <- rep("", nrow(background.network))
-      min_fdr <- rep("", nrow(background.network))
-      for(ii in 1:nrow(background.network)){
+      min_score <- rep(1, nrow(background.network))
+      min_fdr <- rep(1, nrow(background.network))
+      for(ii in seq_len(nrow(background.network))){
 
-        if(source_score[ii]<0 && source_fdr[ii]<pValThresh){
+        if(source_score[ii] < 0 && source_fdr[ii] < pValThresh){
           min_score[ii] <- -1
           min_fdr[ii] <- source_fdr[ii]
         } else {
-          if(target_score[ii]<0 && target_fdr[ii]<pValThresh){
+          if(target_score[ii] < 0 && target_fdr[ii] < pValThresh){
             min_score[ii] <- -1
             min_fdr[ii] <- target_fdr[ii]
           } else {
@@ -78,15 +86,15 @@ integrate_scores_in_bn_hard <- function(as.input = as.input,
 
       if(splice_effect_sign == "positive"){
 
-        min_score <- rep("", nrow(background.network))
-        min_fdr <- rep("", nrow(background.network))
-        for(ii in 1:nrow(background.network)){
+        min_score <- rep(1, nrow(background.network))
+        min_fdr <- rep(1, nrow(background.network))
+        for(ii in seq_len(nrow(background.network))){
 
-          if(source_score[ii]>0 && source_fdr[ii]<pValThresh){
+          if(source_score[ii] > 0 && source_fdr[ii] < pValThresh){
             min_score[ii] <- -1
             min_fdr[ii] <- source_fdr[ii]
           } else {
-            if(target_score[ii]>0 && target_fdr[ii]<pValThresh){
+            if(target_score[ii] > 0 && target_fdr[ii] < pValThresh){
               min_score[ii] <- -1
               min_fdr[ii] <- target_fdr[ii]
             } else {
@@ -100,15 +108,15 @@ integrate_scores_in_bn_hard <- function(as.input = as.input,
 
         if(splice_effect_sign == "both"){
 
-          min_score <- rep("", nrow(background.network))
-          min_fdr <- rep("", nrow(background.network))
-          for(ii in 1:nrow(background.network)){
+          min_score <- rep(1, nrow(background.network))
+          min_fdr <- rep(1, nrow(background.network))
+          for(ii in seq_len(nrow(background.network))){
 
-            if(source_fdr[ii]<pValThresh){
+            if(source_fdr[ii] < pValThresh){
               min_score[ii] <- -1
               min_fdr[ii] <- source_fdr[ii]
             } else {
-              if(target_fdr[ii]<pValThresh){
+              if(target_fdr[ii] < pValThresh){
                 min_score[ii] <- -1
                 min_fdr[ii] <- target_fdr[ii]
               } else {
