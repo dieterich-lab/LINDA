@@ -1,7 +1,7 @@
 Package: LINDA
 Type: Package
-Title: An ILP Formulation to Integrate Alternative Splicing with Protein Network Analysis.
-Version: 0.1.0
+Title: An ILP Formulation to Integrate Alternative Splicing with Protein Network Analysis
+Version: 0.2.0
 Authors@R: c(
     person(given = "Enio",
            family = "Gjerga",
@@ -9,7 +9,7 @@ Authors@R: c(
            email = "enio.gjerga@gmail.com",
            comment = c(ORCID = "0000-0001-8042-0395"))
            )
-Description: A method that combines estimated Transcription Factor activities with Alternative Splicing analysis and prior knowledge of protein-protein and domain-domain interactions in order to infer upstream protein regulatory networks.
+Description: A method that combines estimated transcription factor activities with alternative splicing analysis and prior knowledge of protein-protein and domain-domain interactions in order to infer upstream protein regulatory networks. Alternative-splicing evidence can be integrated either as hard ILP constraints that exclude significantly affected reactions or as soft objective-function penalties that discourage affected reactions while keeping them feasible.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
