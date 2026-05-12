@@ -130,11 +130,22 @@ Below is shown an example of how we can use the ```runLINDA()``` function given
 the inputs from the toy example as well as making use of the default
 CPLEX optimization parameters.
 
+LINDA can use alternative-splicing information in two ways through the
+```constraints_mode``` argument. The default is ```constraints_mode = "hard"```,
+which keeps the original AS-constraint formulation and forces significantly
+affected reactions to zero according to ```pValThresh``` and
+```splice_effect_sign```. Alternatively, ```constraints_mode = "soft"``` keeps
+AS-affected reactions feasible but penalizes them in the objective function. The
+default ```splice_effect_sign``` is now ```"negative"```, while
+```"positive"``` and ```"both"``` remain available.
+
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = as.input, 
                 background.network = bg, solverPath = "~/Downloads/cplex", 
-                input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
-                lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
+                input.node = NULL, constraints_mode = "hard", 
+                pValThresh = 0.05, splice_effect_sign = "negative", 
+                top = 2, lambda1 = 10, lambda2 = 0.001, 
+                mipgap = 0.001, relgap = 0.001)
 
 print(res)
 ```
@@ -170,8 +181,10 @@ analysis as follows:
 ```{r, message=FALSE}
 res <- runLINDA(input.scores = input.scores, as.input = NULL, 
                 background.network = bg, solverPath = "~/Downloads/cplex", 
-                input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
-                lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
+                input.node = NULL, constraints_mode = "hard", 
+                pValThresh = 0.05, splice_effect_sign = "negative", 
+                top = 2, lambda1 = 10, lambda2 = 0.001, 
+                mipgap = 0.001, relgap = 0.001)
 
 print(res$combined_interactions)
 ```
