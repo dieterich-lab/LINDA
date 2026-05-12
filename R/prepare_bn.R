@@ -2,6 +2,7 @@ prepare_bn <- function(background.network = NULL,
                        as.input = NULL,
                        input.node = NULL,
                        input.scores = NULL,
+                       constraints_mode = "hard",
                        pValThresh = NULL,
                        splice_effect_sign = NULL){
 
@@ -145,8 +146,9 @@ prepare_bn <- function(background.network = NULL,
 
   bg2keep <- background.network[idx2keep, ]
 
-  ## Integrate the scores
-  if(is.null(pValThresh)){
+  ## Integrate the scores. The hard and soft modes use the same network
+  ## reduction above but differ in how AS evidence is encoded downstream.
+  if(constraints_mode == "soft"){
 
     background.network <- integrate_scores_in_bn_soft(as.input = as.input,
                                                       background.network = bg2keep,

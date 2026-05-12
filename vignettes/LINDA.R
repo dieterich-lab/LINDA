@@ -18,7 +18,8 @@ print(input.scores)
 ## ---- message=FALSE-----------------------------------------------------------
 res <- runLINDA(input.scores = input.scores, as.input = as.input, 
                 background.network = bg, solverPath = "~/Downloads/cplex", 
-                input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
+                input.node = NULL, constraints_mode = "hard", pValThresh = 0.05,
+                splice_effect_sign = "negative", top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
 print(res)
@@ -26,7 +27,8 @@ print(res)
 ## ---- message=FALSE-----------------------------------------------------------
 res <- runLINDA(input.scores = input.scores, as.input = NULL, 
                 background.network = bg, solverPath = "~/Downloads/cplex", 
-                input.node = NULL, pValThresh = 0.05, top = 2, lambda1 = 10, 
+                input.node = NULL, constraints_mode = "hard", pValThresh = 0.05,
+                splice_effect_sign = "negative", top = 2, lambda1 = 10, 
                 lambda2 = 0.001, mipgap = 0.001, relgap = 0.001)
 
 print(res$combined_interactions)
