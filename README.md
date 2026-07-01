@@ -474,35 +474,6 @@ A useful interpretation workflow is:
 
 ---
 
-## Optional: toy example with `lpSolve`
-
-For small examples, the toy workflow can also be run with `lpSolve`:
-
-```r
-library(LINDA)
-library(lpSolve)
-library(igraph)
-library(XML)
-
-load(file = system.file("extdata", "as_data_toy.RData", package = "LINDA"))
-load(file = system.file("extdata", "bg_toy.RData", package = "LINDA"))
-load(file = system.file("extdata", "tf_act_toy.RData", package = "LINDA"))
-
-res_lpsolve <- runLINDA(
-  input.scores = input.scores,
-  as.input = as.input,
-  background.network = bg,
-  input.node = NULL,
-  pValThresh = 0.05,
-  top = 2,
-  solver = "lpSolve"
-)
-
-print(res_lpsolve$combined_interactions)
-```
-
----
-
 ## Real-case DIGGER resources
 
 For real-case analyses, LINDA requires a background network in which protein and domain interactions are mapped to transcript-level or exon-level identifiers. The package includes both original DIGGER-derived resources and DIGGER v2-derived resources.
