@@ -54,7 +54,7 @@ install.packages(c(
 From GitHub (development branch):
 
 ```r
-devtools::install_github("dieterich-lab/LINDA", build_vignettes = FALSE)
+devtools::install_github("https://github.com/dieterich-lab/LINDA", build_vignettes = FALSE)
 ```
 
 From local source:
