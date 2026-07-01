@@ -237,7 +237,7 @@ The figure below summarizes the toy data used in the three example analyses. It 
 - the TF activity values,
 - the toy domains/transcripts highlighted as splice-affected in this example.
 
-![Toy-example inputs and overview](man/figures/linda_toy_inputs_overview.png)
+![Toy-example inputs and overview](man/figures/toy_example_info.jpg)
 
 **Interpretation of the toy setup**
 
@@ -282,7 +282,7 @@ print(res_no_as$combined_interactions)
 
 The figure below illustrates the splice-unaware solution. Since no AS effect is considered, LINDA selects the shortest signalling paths needed to reach the relevant TF outputs.
 
-![LINDA without AS effects](man/figures/linda_toy_no_as.png)
+![LINDA without AS effects](man/figures/toy_example_no_as.jpg)
 
 **Key point:** This is the baseline reference solution against which the AS-aware hard and soft modes can be compared.
 
@@ -323,7 +323,7 @@ print(res_hard$combined_interactions)
 
 The figure below illustrates the hard-constrained solution.
 
-![LINDA with hard-constrained AS effects](man/figures/linda_toy_hard_constrained.png)
+![LINDA with hard-constrained AS effects](man/figures/toy_example_hard_as.jpg)
 
 **Interpretation:** Connections involving the splice-affected elements (illustrated in the toy example as D3_P1, D7_P3 and D13_P5 in the figure annotation) are skipped, so LINDA is forced to identify an alternative feasible route.
 
@@ -363,7 +363,7 @@ print(res_soft$combined_interactions)
 
 The figure below illustrates the soft-constrained solution.
 
-![LINDA with soft-constrained AS effects](man/figures/linda_toy_soft_constrained.png)
+![LINDA with soft-constrained AS effects](man/figures/toy_example_soft_as.jpg)
 
 **Interpretation:** Connections involving splice-affected elements are discouraged rather than blocked. Therefore, LINDA may prefer a route such as **P2 → P4** over **P1 → P3** if the overall splice penalty is lower.
 
@@ -505,63 +505,139 @@ print(res_lpsolve$combined_interactions)
 
 ## Real-case DIGGER resources
 
-For real-case analyses, LINDA includes DIGGER-derived resources:
+For real-case analyses, LINDA requires a background network in which protein and domain interactions are mapped to transcript-level or exon-level identifiers. The package includes both original DIGGER-derived resources and DIGGER v2-derived resources.
+
+The original DIGGER resource was developed to explore how alternative splicing can affect protein-protein interactions by integrating protein-protein interactions, domain-domain interactions and residue-level interaction information. DIGGER 2.0 extends this idea and adds support for both human and mouse resources, including experimentally supported and predicted domain-domain interactions.
+
+### Original DIGGER resources
+
+The original [DIGGER](https://academic.oup.com/nar/article/49/D1/D309/5911747) resources can be loaded as follows:
 
 ```r
 load(file = system.file("extdata", "digger_human_transcripts.RData", package = "LINDA"))
 load(file = system.file("extdata", "digger_human_exons.RData", package = "LINDA"))
+load(file = system.file("extdata", "digger_human.RData", package = "LINDA"))
 load(file = system.file("extdata", "digger_mouse.RData", package = "LINDA"))
 ```
 
----
+### DIGGER v2 resources
 
-## Where should the README images be stored?
+LINDA also includes [DIGGER v2-based](https://academic.oup.com/nar/article/53/W1/W245/8126897) background networks for both **human** and **mouse**. These resources are provided at two mapping resolutions:
 
-For **README images**, the recommended location in an R package is:
+- **exon-level** resources,
+- **transcript-level** resources.
 
-```text
-man/figures/
+For each organism and resolution, the DIGGER v2 resources are split into three confidence classes:
+
+- **Gold**: highest-confidence interaction class,
+- **Silver**: intermediate-confidence interaction class,
+- **Bronze**: broader/lower-confidence interaction class.
+
+The available DIGGER v2 resource files are:
+
+| Organism | Resolution | Confidence | File |
+|---|---|---:|---|
+| Human | Exons | Gold | `digger_v2_human_exons_gold.RData` |
+| Human | Exons | Silver | `digger_v2_human_exons_silver.RData` |
+| Human | Exons | Bronze | `digger_v2_human_exons_bronze.RData` |
+| Human | Transcripts | Gold | `digger_v2_human_transcripts_gold.RData` |
+| Human | Transcripts | Silver | `digger_v2_human_transcripts_silver.RData` |
+| Human | Transcripts | Bronze | `digger_v2_human_transcripts_bronze.RData` |
+| Mouse | Exons | Gold | `digger_v2_mouse_exons_gold.RData` |
+| Mouse | Exons | Silver | `digger_v2_mouse_exons_silver.RData` |
+| Mouse | Exons | Bronze | `digger_v2_mouse_exons_bronze.RData` |
+| Mouse | Transcripts | Gold | `digger_v2_mouse_transcripts_gold.RData` |
+| Mouse | Transcripts | Silver | `digger_v2_mouse_transcripts_silver.RData` |
+| Mouse | Transcripts | Bronze | `digger_v2_mouse_transcripts_bronze.RData` |
+
+### Loading one DIGGER v2 resource
+
+For example, to load the human exon-level gold-confidence DIGGER v2 network:
+
+```r
+load(file = system.file(
+  "extdata",
+  "digger_v2_human_exons_gold.RData",
+  package = "LINDA"
+))
 ```
 
-That is exactly where the images used in this README are placed. For example:
+If you want to load resources programmatically without depending on the internal object name stored inside the `.RData` file, you can use a small helper function:
 
-```text
-man/figures/linda_toy_inputs_overview.png
-man/figures/linda_toy_no_as.png
-man/figures/linda_toy_hard_constrained.png
-man/figures/linda_toy_soft_constrained.png
+```r
+load_linda_extdata <- function(filename) {
+  env <- new.env(parent = emptyenv())
+  load(system.file("extdata", filename, package = "LINDA"), envir = env)
+  object_names <- ls(env)
+
+  if (length(object_names) != 1) {
+    stop("Expected exactly one object in ", filename,
+         "; found: ", paste(object_names, collapse = ", "))
+  }
+
+  env[[object_names[1]]]
+}
+
+bg_human_exons_gold <- load_linda_extdata("digger_v2_human_exons_gold.RData")
 ```
 
-You can then reference them in `README.md` as:
+The loaded object can then be supplied to `runLINDA()` as the `background.network` argument:
 
-```md
-![Caption](man/figures/linda_toy_no_as.png)
+```r
+res <- runLINDA(
+  input.scores = input.scores,
+  as.input = as.input,
+  background.network = bg_human_exons_gold,
+  solverPath = solver_path,
+  constraints_mode = "hard",
+  top = 50
+)
 ```
 
-If later you also want to use similar images inside an R Markdown vignette, it is common to place vignette-specific figures in:
+### Combining confidence classes
 
-```text
-vignettes/figures/
+If you want to combine different confidence classes, load the desired resources and combine them with `rbind()`.
+
+For example, to combine the human exon-level gold, silver and bronze networks:
+
+```r
+bg_human_exons_gold <- load_linda_extdata("digger_v2_human_exons_gold.RData")
+bg_human_exons_silver <- load_linda_extdata("digger_v2_human_exons_silver.RData")
+bg_human_exons_bronze <- load_linda_extdata("digger_v2_human_exons_bronze.RData")
+
+bg_human_exons_all <- rbind(
+  bg_human_exons_gold,
+  bg_human_exons_silver,
+  bg_human_exons_bronze
+)
 ```
 
----
+If you want to keep track of the confidence class after combining, add a class label before using `rbind()`:
 
-## Development workflow
+```r
+bg_human_exons_gold$confidence_class <- "gold"
+bg_human_exons_silver$confidence_class <- "silver"
+bg_human_exons_bronze$confidence_class <- "bronze"
 
-If you are working on the `dev` branch locally:
-
-```bash
-git clone -b dev https://github.com/dieterich-lab/LINDA.git
-cd LINDA
+bg_human_exons_all <- rbind(
+  bg_human_exons_gold,
+  bg_human_exons_silver,
+  bg_human_exons_bronze
+)
 ```
 
-After editing the README and adding figures:
+You can use the same approach for mouse resources and for transcript-level resources. For example:
 
-```bash
-git status
-git add README.md man/figures/
-git commit -m "Update README toy example documentation and figures"
-git push origin dev
+```r
+bg_mouse_transcripts_gold <- load_linda_extdata("digger_v2_mouse_transcripts_gold.RData")
+bg_mouse_transcripts_silver <- load_linda_extdata("digger_v2_mouse_transcripts_silver.RData")
+
+bg_mouse_transcripts_gold_silver <- rbind(
+  bg_mouse_transcripts_gold,
+  bg_mouse_transcripts_silver
+)
 ```
 
-When `dev` is stable, merge it into `main`.
+### References
+
+Gjerga et al., **Characterizing alternative splicing effects on protein interaction networks with LINDA**, *Bioinformatics*, 2023. <https://doi.org/10.1093/bioinformatics/btad224>
