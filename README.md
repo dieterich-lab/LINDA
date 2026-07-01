@@ -34,8 +34,6 @@ The recommended solver is **IBM ILOG CPLEX**, especially for larger analyses. Af
 solverPath = "~/Downloads/cplex"
 ```
 
-Small toy examples may also be run with `solver = "lpSolve"`, but CPLEX is the recommended solver for standard LINDA analyses.
-
 ### 2. Install R dependencies
 
 ```r
@@ -51,18 +49,12 @@ install.packages(c(
 ))
 ```
 
-Optional for small toy-example testing:
-
-```r
-install.packages("lpSolve")
-```
-
 ### 3. Install LINDA
 
 From GitHub (development branch):
 
 ```r
-devtools::install_github("dieterich-lab/LINDA", ref = "dev", build_vignettes = FALSE)
+devtools::install_github("dieterich-lab/LINDA", build_vignettes = FALSE)
 ```
 
 From local source:
@@ -552,19 +544,6 @@ load_linda_extdata <- function(filename) {
 bg_human_exons_gold <- load_linda_extdata("digger_v2_human_exons_gold.RData")
 ```
 
-The loaded object can then be supplied to `runLINDA()` as the `background.network` argument:
-
-```r
-res <- runLINDA(
-  input.scores = input.scores,
-  as.input = as.input,
-  background.network = bg_human_exons_gold,
-  solverPath = solver_path,
-  constraints_mode = "hard",
-  top = 50
-)
-```
-
 ### Combining confidence classes
 
 If you want to combine different confidence classes, load the desired resources and combine them with `rbind()`.
@@ -608,6 +587,8 @@ bg_mouse_transcripts_gold_silver <- rbind(
   bg_mouse_transcripts_silver
 )
 ```
+
+Real-case applications of LINDA over the [ENCORE Initiative](https://www.encodeproject.org/encore-matrix/?type=Experiment&status=released&internal_tags=ENCORE) dataset by using the DIGGER-v1 background have been provided in this separate [GitHub repo](https://github.com/enio23/LINDA_ENCORE).
 
 ### References
 
