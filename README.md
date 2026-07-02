@@ -62,6 +62,7 @@ From local source:
 ```r
 install.packages("path_to_extracted_LINDA_directory", repos = NULL, type = "source")
 ```
+**NOTE:** The package totals ~256MB of memory. If you have trouble installing LINDA with ```install_github``` on your first attempt, try it a couple of times; if the problem persists, download the whole package and install it locally.
 
 ---
 
